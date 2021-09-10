@@ -1,0 +1,31 @@
+{
+  "name": "todo-nem",
+  "version": "1.0.0",
+  "description": "TODO NodeJS Express MongoDB Rest API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Julien-Wiegandt/todo-nem.git"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "rest",
+    "api"
+  ],
+  "author": "Julien Wiegandt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Julien-Wiegandt/todo-nem/issues"
+  },
+  "homepage": "https://github.com/Julien-Wiegandt/todo-nem#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.5"
+  }
+}
