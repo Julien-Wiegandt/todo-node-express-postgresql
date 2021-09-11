@@ -1,3 +1,3 @@
 module.exports = {
-  url: "mongodb://localhost:27017/todo_db",
+  url: "mongodb+srv://dbJulienW:todo-database-pass-2021@cluster0.kn6le.mongodb.net/todo_db?retryWrites=true&w=majority",
 };

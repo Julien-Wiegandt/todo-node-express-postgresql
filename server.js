@@ -1,11 +1,36 @@
 const express = require("express");
 const cors = require("cors");
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 const app = express();
 
 var corsOptions = {
   origin: "http://localhost:8081",
 };
+
+// Swagger configs
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "TODO API",
+      description: "NodeJS + Express + MongoDB todo API",
+      contact: {
+        name: "Julien Wiegandt",
+        email: "julienwiegandt@gmail.com",
+      },
+      license: {
+        name: "MIT",
+        url: "https://mit-license.org/",
+      },
+      servers: ["http://localhost:8080"],
+    },
+  },
+  apis: ["app/routes/*.js", "server.js"],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(cors(corsOptions));
 
@@ -15,10 +40,22 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-// simple route
+/**
+ * @swagger
+ * /:
+ *  get:
+ *    description: Testing route
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to TODO application." });
 });
+
+require("./app/routes/Task.routes")(app);
+require("./app/routes/TaskGroup.routes")(app);
+require("./app/routes/User.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

@@ -16,9 +16,10 @@ exports.create = (req, res) => {
   });
 
   // Save Task in the database
-  Task.save(task)
+  task
+    .save(task)
     .then((data) => {
-      res.send(data);
+      res.status(201).send(data);
     })
     .catch((err) => {
       res.status(500).send({
@@ -49,6 +50,7 @@ exports.findOne = (req, res) => {
 
   Task.findById(id)
     .then((data) => {
+      //It does 404 error just when a wrong "12 bytes" id is enter, ex : 0747a9ad467d4dc29ce70344
       if (!data) res.status(404).send({ message: "Not found Task with id " + id });
       else res.send(data);
     })
@@ -67,13 +69,13 @@ exports.update = (req, res) => {
 
   const id = req.params.id;
 
-  Task.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+  Task.findByIdAndUpdate(id, req.body, { useFindAndModify: false, new: true })
     .then((data) => {
       if (!data) {
-        res.status(404).send({
+        res.status(400).send({
           message: `Cannot update Task with id=${id}. Maybe Task was not found!`,
         });
-      } else res.send({ message: "Task was updated successfully." });
+      } else res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
@@ -94,7 +96,7 @@ exports.delete = (req, res) => {
         });
       } else {
         res.send({
-          message: "Task was deleted successfully!",
+          id: data.id,
         });
       }
     })
@@ -110,7 +112,7 @@ exports.deleteAll = (req, res) => {
   Task.deleteMany({})
     .then((data) => {
       res.send({
-        message: `${data.deletedCount} Tasks were deleted successfully!`,
+        deletedCount: data.deletedCount,
       });
     })
     .catch((err) => {
