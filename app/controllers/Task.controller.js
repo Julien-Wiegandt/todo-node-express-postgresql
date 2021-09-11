@@ -1,11 +1,14 @@
 const db = require("../models");
 const Task = db.task;
+const TaskGroup = db.taskGroup;
 
-// Create and Save a new Task
+// Create and Save a new Task in a existing TaskGroup
 exports.create = (req, res) => {
+  const taskGroupId = req.params.id;
+
   // Validate request
-  if (!req.body.title) {
-    res.status(400).send({ message: "Content can not be empty!" });
+  if (!req.body.title || !taskGroupId) {
+    res.status(400).send({ message: "Wrong parameters/body" });
     return;
   }
 
@@ -18,8 +21,38 @@ exports.create = (req, res) => {
   // Save Task in the database
   task
     .save(task)
-    .then((data) => {
-      res.status(201).send(data);
+    .then((task) => {
+      TaskGroup.findById(taskGroupId)
+        .then((taskGroup) => {
+          if (!taskGroup) {
+            res
+              .status(404)
+              .send({ message: "Not found TaskGroup with id " + taskGroupId });
+          } else {
+            taskGroup.tasks.push(task);
+            TaskGroup.findByIdAndUpdate(taskGroupId, taskGroup, {
+              useFindAndModify: false,
+              new: true,
+            })
+              .then((data) => {
+                if (!data) {
+                  res.status(404).send({
+                    message: `Cannot update TaskGroup with id=${taskGroupId}. Maybe TaskGroup was not found!`,
+                  });
+                } else res.status(201).send(task);
+              })
+              .catch((err) => {
+                res.status(500).send({
+                  message: "Error updating TaskGroup with id=" + taskGroupId,
+                });
+              });
+          }
+        })
+        .catch((err) => {
+          res
+            .status(500)
+            .send({ message: "Error retrieving TaskGroup with id=" + taskGroupId });
+        });
     })
     .catch((err) => {
       res.status(500).send({
@@ -95,6 +128,7 @@ exports.delete = (req, res) => {
           message: `Cannot delete Task with id=${id}. Maybe Task was not found!`,
         });
       } else {
+        deleteTaskByIdInTaskGroups(id);
         res.send({
           id: data.id,
         });
@@ -106,6 +140,41 @@ exports.delete = (req, res) => {
       });
     });
 };
+
+function deleteTaskByIdInTaskGroups(id) {
+  TaskGroup.find()
+    .then((data) => {
+      data.map((taskGroup) => {
+        const filteredTask = taskGroup.tasks.filter((task) => {
+          return task._id.toString() !== id;
+        });
+        if (filteredTask.length !== taskGroup.tasks.length) {
+          taskGroup.tasks = filteredTask;
+          TaskGroup.findByIdAndUpdate(taskGroup.id, taskGroup, {
+            useFindAndModify: false,
+            new: true,
+          })
+            .then((data) => {
+              // if (!data) {
+              //   res.status(404).send({
+              //     message: `Cannot update TaskGroup with id=${id}. Maybe TaskGroup was not found!`,
+              //   });
+              // } else res.send(data);
+            })
+            .catch((err) => {
+              // res.status(500).send({
+              //   message: "Error updating TaskGroup with id=" + id,
+              // });
+            });
+        }
+      });
+    })
+    .catch((err) => {
+      // res.status(500).send({
+      //   message: err.message || "Some error occurred while retrieving TaskGroup.",
+      // });
+    });
+}
 
 // Delete all Tasks from the database.
 exports.deleteAll = (req, res) => {

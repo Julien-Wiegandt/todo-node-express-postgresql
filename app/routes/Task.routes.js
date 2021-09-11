@@ -6,15 +6,20 @@ module.exports = (app) => {
   // Create a new Task
   /**
    * @swagger
-   * /api/task:
+   * /api/task/{taskGroupId}:
    *  post:
    *    tags:
-   *    - "Task"
+   *    - "Task 2.0"
    *    summary: Create a Task
    *    description: Create a Task
    *    consumes: application/json
    *    produces: application/json
    *    parameters:
+   *    - name: "taskGroupId"
+   *      in: "path"
+   *      description: "ID of Task's TaskGroup"
+   *      required: true
+   *      type: "string"
    *    - in: body
    *      name: body
    *      description: A Task has a title and a "done" status
@@ -32,12 +37,21 @@ module.exports = (app) => {
    *    responses:
    *      '201':
    *        description: Task successfully created
+   *        schema:
+   *          type: "object"
+   *          properties:
+   *            title:
+   *              type: "string"
+   *            done:
+   *              type: boolean
+   *            id:
+   *              type: "string"
    *      '400':
    *        description: Wrong Task's body parameters/content
    *      '500':
    *        description: Internal Server Error
    */
-  router.post("/", task.create);
+  router.post("/:id", task.create);
 
   // Retrieve all Tasks
   /**
@@ -45,7 +59,7 @@ module.exports = (app) => {
    * /api/task:
    *  get:
    *    tags:
-   *    - "Task"
+   *    - "Task 2.0"
    *    summary: Retrieve all Tasks
    *    description: Retrieve all Tasks
    *    consumes: application/json
@@ -75,7 +89,7 @@ module.exports = (app) => {
    * /api/task/todo:
    *  get:
    *    tags:
-   *    - "Task"
+   *    - "Task 2.0"
    *    summary: Retrieve all to do Tasks
    *    description: Retrieve all to do Tasks
    *    consumes: application/json
@@ -105,7 +119,7 @@ module.exports = (app) => {
    * /api/task/done:
    *  get:
    *    tags:
-   *    - "Task"
+   *    - "Task 2.0"
    *    summary: Retrieve all done Tasks
    *    description: Retrieve all done Tasks
    *    consumes: application/json
@@ -135,7 +149,7 @@ module.exports = (app) => {
    * /api/task/{taskId}:
    *  get:
    *    tags:
-   *    - "Task"
+   *    - "Task 2.0"
    *    summary: Retrieve a single Task with id
    *    description: Retrieve a single Task with id
    *    consumes: application/json
@@ -171,7 +185,7 @@ module.exports = (app) => {
    * /api/task/{taskId}:
    *  put:
    *    tags:
-   *    - "Task"
+   *    - "Task 2.0"
    *    summary: Update a Task
    *    description: Update a Task
    *    consumes: application/json
@@ -218,7 +232,7 @@ module.exports = (app) => {
    * /api/task/{taskId}:
    *  delete:
    *    tags:
-   *    - "Task"
+   *    - "Task 2.0 TO TEST"
    *    summary: Delete a Task
    *    description: Delete a Task
    *    consumes: application/json

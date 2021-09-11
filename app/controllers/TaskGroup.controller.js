@@ -1,7 +1,9 @@
 const db = require("../models");
-const GroupTask = db.taskGroup;
+const TaskGroupModel = require("../models/TaskGroup.model");
+const TaskGroup = db.taskGroup;
+const Task = db.task;
 
-// Create and Save a new GroupTask
+// Create and Save a new TaskGroup
 exports.create = (req, res) => {
   // Validate request
   if (!req.body.title) {
@@ -9,56 +11,55 @@ exports.create = (req, res) => {
     return;
   }
 
-  // Create a GroupTask
-  const groupTask = new GroupTask({
+  // Create a TaskGroup
+  const taskGroup = new TaskGroup({
     title: req.body.title,
-    // tasks: req.body.tasks,
   });
 
-  // Save GroupTask in the database
-  groupTask
-    .save(groupTask)
+  // Save TaskGroup in the database
+  taskGroup
+    .save(taskGroup)
     .then((data) => {
       res.status(201).send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the GroupTask.",
+        message: err.message || "Some error occurred while creating the TaskGroup.",
       });
     });
 };
 
-// Retrieve all GroupTasks from the database.
+// Retrieve all TaskGroups from the database.
 exports.findAll = (req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
 
-  GroupTask.find(condition)
+  TaskGroup.find(condition)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving groupTasks.",
+        message: err.message || "Some error occurred while retrieving TaskGroups.",
       });
     });
 };
 
-// Find a single GroupTask with an id
+// Find a single TaskGroup with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  GroupTask.findById(id)
+  TaskGroup.findById(id)
     .then((data) => {
-      if (!data) res.status(404).send({ message: "Not found GroupTask with id " + id });
+      if (!data) res.status(404).send({ message: "Not found TaskGroup with id " + id });
       else res.send(data);
     })
     .catch((err) => {
-      res.status(500).send({ message: "Error retrieving GroupTask with id=" + id });
+      res.status(500).send({ message: "Error retrieving TaskGroup with id=" + id });
     });
 };
 
-// Update a GroupTask by the id in the request
+// Update a TaskGroup by the id in the request
 exports.update = (req, res) => {
   if (!req.body) {
     return res.status(400).send({
@@ -68,31 +69,31 @@ exports.update = (req, res) => {
 
   const id = req.params.id;
 
-  GroupTask.findByIdAndUpdate(id, req.body, { useFindAndModify: false, new: true })
+  TaskGroup.findByIdAndUpdate(id, req.body, { useFindAndModify: false, new: true })
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot update GroupTask with id=${id}. Maybe GroupTask was not found!`,
+          message: `Cannot update TaskGroup with id=${id}. Maybe TaskGroup was not found!`,
         });
       } else res.send(data);
     })
     .catch((err) => {
       console.log(err);
       res.status(500).send({
-        message: "Error updating GroupTask with id=" + id,
+        message: "Error updating TaskGroup with id=" + id,
       });
     });
 };
 
-// Delete a GroupTask with the specified id in the request
+// Delete a TaskGroup with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  GroupTask.findByIdAndRemove(id)
+  TaskGroup.findByIdAndRemove(id)
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot delete GroupTask with id=${id}. Maybe GroupTask was not found!`,
+          message: `Cannot delete TaskGroup with id=${id}. Maybe TaskGroup was not found!`,
         });
       } else {
         res.send({
@@ -102,14 +103,14 @@ exports.delete = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete GroupTask with id=" + id,
+        message: "Could not delete TaskGroup with id=" + id,
       });
     });
 };
 
-// Delete all GroupTasks from the database.
+// Delete all TaskGroups from the database.
 exports.deleteAll = (req, res) => {
-  GroupTask.deleteMany({})
+  TaskGroup.deleteMany({})
     .then((data) => {
       res.send({
         deletedCount: data.deletedCount,
@@ -117,19 +118,19 @@ exports.deleteAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while removing all groupTasks.",
+        message: err.message || "Some error occurred while removing all TaskGroups.",
       });
     });
 };
 
-// Find all done GroupTasks
+// Find all done TaskGroups
 exports.findAllDone = (req, res) => {
   const id = req.params.id;
 
-  GroupTask.findById(id)
+  TaskGroup.findById(id)
     .then((data) => {
       if (!data) {
-        res.status(404).send({ message: "Not found GroupTask with id " + id });
+        res.status(404).send({ message: "Not found TaskGroup with id " + id });
       } else {
         let doneTasks = [];
         const tasks = data.tasks;
@@ -143,18 +144,18 @@ exports.findAllDone = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({ message: "Error retrieving GroupTask with id=" + id });
+      res.status(500).send({ message: "Error retrieving TaskGroup with id=" + id });
     });
 };
 
-// Find all to do GroupTasks
+// Find all to do TaskGroups
 exports.findAllToDo = (req, res) => {
   const id = req.params.id;
 
-  GroupTask.findById(id)
+  TaskGroup.findById(id)
     .then((data) => {
       if (!data) {
-        res.status(404).send({ message: "Not found GroupTask with id " + id });
+        res.status(404).send({ message: "Not found TaskGroup with id " + id });
       } else {
         let toDoTasks = [];
         const tasks = data.tasks;
@@ -169,7 +170,56 @@ exports.findAllToDo = (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).send({ message: "Error retrieving GroupTask with id=" + id });
+      res.status(500).send({ message: "Error retrieving TaskGroup with id=" + id });
     });
+};
+
+// Add a task to a TaskGroup
+exports.addTask = (req, res) => {
+  const taskId = req.params.taskId;
+  const taskGroupId = req.params.taskGroupId;
+
+  if (!taskId || !taskGroupId) {
+    res.status(400).send({ message: "Enter parameters are wrong" });
+  } else {
+    Task.findById(taskId)
+      .then((task) => {
+        //It does 404 error just when a wrong "12 bytes" id is enter, ex : 0747a9ad467d4dc29ce70344
+        if (!task) res.status(404).send({ message: "Not found Task with id " + id });
+        else {
+          TaskGroup.findById(taskGroupId)
+            .then((taskGroup) => {
+              if (!taskGroup)
+                res.status(404).send({ message: "Not found TaskGroup with id " + id });
+              else {
+                taskGroup.tasks.push(task);
+                TaskGroup.findByIdAndUpdate(taskGroupId, taskGroup, {
+                  useFindAndModify: false,
+                  new: true,
+                })
+                  .then((data) => {
+                    if (!data) {
+                      res.status(404).send({
+                        message: `Cannot update TaskGroup with id=${id}. Maybe TaskGroup was not found!`,
+                      });
+                    } else res.send(data);
+                  })
+                  .catch((err) => {
+                    res.status(500).send({
+                      message: "Error updating TaskGroup with id=" + id,
+                    });
+                  });
+              }
+            })
+            .catch((err) => {
+              res
+                .status(500)
+                .send({ message: "Error retrieving TaskGroup with id=" + id });
+            });
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({ message: "Error retrieving Task with id=" + id });
+      });
+  }
 };
