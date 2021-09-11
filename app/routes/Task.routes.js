@@ -9,7 +9,7 @@ module.exports = (app) => {
    * /api/task:
    *  post:
    *    tags:
-   *    - "task"
+   *    - "Task"
    *    summary: Create a Task
    *    description: Create a Task
    *    consumes: application/json
@@ -45,7 +45,7 @@ module.exports = (app) => {
    * /api/task:
    *  get:
    *    tags:
-   *    - "task"
+   *    - "Task"
    *    summary: Retrieve all Tasks
    *    description: Retrieve all Tasks
    *    consumes: application/json
@@ -75,7 +75,7 @@ module.exports = (app) => {
    * /api/task/todo:
    *  get:
    *    tags:
-   *    - "task"
+   *    - "Task"
    *    summary: Retrieve all to do Tasks
    *    description: Retrieve all to do Tasks
    *    consumes: application/json
@@ -105,7 +105,7 @@ module.exports = (app) => {
    * /api/task/done:
    *  get:
    *    tags:
-   *    - "task"
+   *    - "Task"
    *    summary: Retrieve all done Tasks
    *    description: Retrieve all done Tasks
    *    consumes: application/json
@@ -135,7 +135,7 @@ module.exports = (app) => {
    * /api/task/{taskId}:
    *  get:
    *    tags:
-   *    - "task"
+   *    - "Task"
    *    summary: Retrieve a single Task with id
    *    description: Retrieve a single Task with id
    *    consumes: application/json
@@ -171,7 +171,7 @@ module.exports = (app) => {
    * /api/task/{taskId}:
    *  put:
    *    tags:
-   *    - "task"
+   *    - "Task"
    *    summary: Update a Task
    *    description: Update a Task
    *    consumes: application/json
@@ -218,7 +218,7 @@ module.exports = (app) => {
    * /api/task/{taskId}:
    *  delete:
    *    tags:
-   *    - "task"
+   *    - "Task"
    *    summary: Delete a Task
    *    description: Delete a Task
    *    consumes: application/json
@@ -250,7 +250,7 @@ module.exports = (app) => {
    * /api/task:
    *  delete:
    *    tags:
-   *    - "task"
+   *    - "Task"
    *    summary: Delete all Tasks
    *    description: Delete all Tasks
    *    consumes: application/json

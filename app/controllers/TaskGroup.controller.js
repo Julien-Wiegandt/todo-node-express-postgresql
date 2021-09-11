@@ -12,13 +12,14 @@ exports.create = (req, res) => {
   // Create a GroupTask
   const groupTask = new GroupTask({
     title: req.body.title,
-    tasks: req.body.tasks,
+    // tasks: req.body.tasks,
   });
 
   // Save GroupTask in the database
-  GroupTask.save(groupTask)
+  groupTask
+    .save(groupTask)
     .then((data) => {
-      res.send(data);
+      res.status(201).send(data);
     })
     .catch((err) => {
       res.status(500).send({
@@ -67,15 +68,16 @@ exports.update = (req, res) => {
 
   const id = req.params.id;
 
-  GroupTask.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+  GroupTask.findByIdAndUpdate(id, req.body, { useFindAndModify: false, new: true })
     .then((data) => {
       if (!data) {
         res.status(404).send({
           message: `Cannot update GroupTask with id=${id}. Maybe GroupTask was not found!`,
         });
-      } else res.send({ message: "GroupTask was updated successfully." });
+      } else res.send(data);
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).send({
         message: "Error updating GroupTask with id=" + id,
       });
@@ -94,7 +96,7 @@ exports.delete = (req, res) => {
         });
       } else {
         res.send({
-          message: "GroupTask was deleted successfully!",
+          id: data.id,
         });
       }
     })
@@ -110,7 +112,7 @@ exports.deleteAll = (req, res) => {
   GroupTask.deleteMany({})
     .then((data) => {
       res.send({
-        message: `${data.deletedCount} GroupTasks were deleted successfully!`,
+        deletedCount: data.deletedCount,
       });
     })
     .catch((err) => {
@@ -122,26 +124,52 @@ exports.deleteAll = (req, res) => {
 
 // Find all done GroupTasks
 exports.findAllDone = (req, res) => {
-  GroupTask.find({ "tasks.done": true })
+  const id = req.params.id;
+
+  GroupTask.findById(id)
     .then((data) => {
-      res.send(data);
+      if (!data) {
+        res.status(404).send({ message: "Not found GroupTask with id " + id });
+      } else {
+        let doneTasks = [];
+        const tasks = data.tasks;
+
+        tasks.map((task) => {
+          if (task.done) {
+            doneTasks.push(task);
+          }
+        });
+        res.send(doneTasks);
+      }
     })
     .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving groupTasks.",
-      });
+      res.status(500).send({ message: "Error retrieving GroupTask with id=" + id });
     });
 };
 
 // Find all to do GroupTasks
 exports.findAllToDo = (req, res) => {
-  GroupTask.find({ "tasks.done": false })
+  const id = req.params.id;
+
+  GroupTask.findById(id)
     .then((data) => {
-      res.send(data);
+      if (!data) {
+        res.status(404).send({ message: "Not found GroupTask with id " + id });
+      } else {
+        let toDoTasks = [];
+        const tasks = data.tasks;
+
+        tasks.map((task) => {
+          if (task.done === false) {
+            toDoTasks.push(task);
+          }
+        });
+
+        res.send(toDoTasks);
+      }
     })
     .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving groupTasks.",
-      });
+      console.log(err);
+      res.status(500).send({ message: "Error retrieving GroupTask with id=" + id });
     });
 };
