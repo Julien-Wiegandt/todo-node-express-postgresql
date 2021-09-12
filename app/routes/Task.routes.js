@@ -232,7 +232,7 @@ module.exports = (app) => {
    * /api/task/{taskId}:
    *  delete:
    *    tags:
-   *    - "Task 2.0 TO TEST"
+   *    - "Task 2.0"
    *    summary: Delete a Task
    *    description: Delete a Task
    *    consumes: application/json
@@ -264,7 +264,7 @@ module.exports = (app) => {
    * /api/task:
    *  delete:
    *    tags:
-   *    - "Task"
+   *    - "Task 2.0"
    *    summary: Delete all Tasks
    *    description: Delete all Tasks
    *    consumes: application/json

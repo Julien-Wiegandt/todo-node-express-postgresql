@@ -141,6 +141,9 @@ exports.delete = (req, res) => {
     });
 };
 
+/**
+ * @todo Fix the optimisation issue (loop on all groups)
+ */
 function deleteTaskByIdInTaskGroups(id) {
   TaskGroup.find()
     .then((data) => {
@@ -154,25 +157,15 @@ function deleteTaskByIdInTaskGroups(id) {
             useFindAndModify: false,
             new: true,
           })
-            .then((data) => {
-              // if (!data) {
-              //   res.status(404).send({
-              //     message: `Cannot update TaskGroup with id=${id}. Maybe TaskGroup was not found!`,
-              //   });
-              // } else res.send(data);
-            })
+            .then(() => {})
             .catch((err) => {
-              // res.status(500).send({
-              //   message: "Error updating TaskGroup with id=" + id,
-              // });
+              console.log(err);
             });
         }
       });
     })
     .catch((err) => {
-      // res.status(500).send({
-      //   message: err.message || "Some error occurred while retrieving TaskGroup.",
-      // });
+      console.log(err);
     });
 }
 
@@ -180,6 +173,7 @@ function deleteTaskByIdInTaskGroups(id) {
 exports.deleteAll = (req, res) => {
   Task.deleteMany({})
     .then((data) => {
+      deleteAllTasksInTaskGroups();
       res.send({
         deletedCount: data.deletedCount,
       });
@@ -190,6 +184,26 @@ exports.deleteAll = (req, res) => {
       });
     });
 };
+
+function deleteAllTasksInTaskGroups() {
+  TaskGroup.find()
+    .then((data) => {
+      data.map((taskGroup) => {
+        taskGroup.tasks = [];
+        TaskGroup.findByIdAndUpdate(taskGroup.id, taskGroup, {
+          useFindAndModify: false,
+          new: true,
+        })
+          .then(() => {})
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
 
 // Find all done Tasks
 exports.findAllDone = (req, res) => {
