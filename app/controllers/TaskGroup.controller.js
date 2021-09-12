@@ -96,8 +96,12 @@ exports.delete = (req, res) => {
           message: `Cannot delete TaskGroup with id=${id}. Maybe TaskGroup was not found!`,
         });
       } else {
-        res.send({
-          id: data.id,
+        const tasks = data.tasks.map((task) => task.toString());
+        Task.deleteMany({ _id: { $in: tasks } }).then((secondData) => {
+          res.send({
+            id: data.id,
+            deletedTasksCount: secondData.deletedCount,
+          });
         });
       }
     })
@@ -110,10 +114,19 @@ exports.delete = (req, res) => {
 
 // Delete all TaskGroups from the database.
 exports.deleteAll = (req, res) => {
-  TaskGroup.deleteMany({})
-    .then((data) => {
-      res.send({
-        deletedCount: data.deletedCount,
+  TaskGroup.find()
+    .then((firstData) => {
+      let tasks = [];
+      firstData.map((taskGroup) => {
+        tasks = tasks.concat(taskGroup.tasks.map((task) => task.toString()));
+      });
+      TaskGroup.deleteMany({}).then((data) => {
+        Task.deleteMany({ _id: { $in: tasks } }).then((secondData) => {
+          res.send({
+            deletedTaskGroupsCount: data.deletedCount,
+            deletedTasksCount: secondData.deletedCount,
+          });
+        });
       });
     })
     .catch((err) => {
@@ -128,22 +141,20 @@ exports.findAllDone = (req, res) => {
   const id = req.params.id;
 
   TaskGroup.findById(id)
+    .populate("tasks")
     .then((data) => {
       if (!data) {
         res.status(404).send({ message: "Not found TaskGroup with id " + id });
       } else {
-        let doneTasks = [];
         const tasks = data.tasks;
-
-        tasks.map((task) => {
-          if (task.done) {
-            doneTasks.push(task);
-          }
+        const doneTasks = tasks.filter((task) => {
+          return task.done === true;
         });
         res.send(doneTasks);
       }
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).send({ message: "Error retrieving TaskGroup with id=" + id });
     });
 };
@@ -153,6 +164,7 @@ exports.findAllToDo = (req, res) => {
   const id = req.params.id;
 
   TaskGroup.findById(id)
+    .populate("tasks")
     .then((data) => {
       if (!data) {
         res.status(404).send({ message: "Not found TaskGroup with id " + id });

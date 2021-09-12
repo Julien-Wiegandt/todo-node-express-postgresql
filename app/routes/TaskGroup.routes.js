@@ -42,7 +42,7 @@ module.exports = (app) => {
    * /api/task-group:
    *  get:
    *    tags:
-   *    - "TaskGroup"
+   *    - "TaskGroup 2.0"
    *    summary: Retrieve all TaskGroups
    *    description: Retrieve all TaskGroups
    *    consumes: application/json
@@ -81,7 +81,7 @@ module.exports = (app) => {
    * /api/task-group/{taskGroupId}/todo:
    *  get:
    *    tags:
-   *    - "TaskGroup"
+   *    - "TaskGroup 2.0"
    *    summary: Retrieve all to do Tasks in a TaskGroup
    *    description: Retrieve all to do Tasks in a TaskGroup
    *    consumes: application/json
@@ -117,7 +117,7 @@ module.exports = (app) => {
    * /api/task-group/{taskGroupId}/done:
    *  get:
    *    tags:
-   *    - "TaskGroup"
+   *    - "TaskGroup 2.0"
    *    summary: Retrieve all done Tasks in a TaskGroup
    *    description: Retrieve all done Tasks in a TaskGroup
    *    consumes: application/json
@@ -153,7 +153,7 @@ module.exports = (app) => {
    * /api/task-group/{taskGroupId}:
    *  get:
    *    tags:
-   *    - "TaskGroup"
+   *    - "TaskGroup 2.0"
    *    summary: Retrieve a single TaskGroup with id
    *    description: Retrieve a single TaskGroup with id
    *    consumes: application/json
@@ -198,7 +198,7 @@ module.exports = (app) => {
    * /api/task-group/{taskGroupId}:
    *  put:
    *    tags:
-   *    - "TaskGroup"
+   *    - "TaskGroup 2.0"
    *    summary: Update a TaskGroup
    *    description: Update a TaskGroup
    *    consumes: application/json
@@ -271,6 +271,8 @@ module.exports = (app) => {
    *          properties:
    *            id:
    *              type: "string"
+   *            deletedTasksCount:
+   *              type: "integer"
    *      '404':
    *        description: TaskGroup not found
    *      '500':
@@ -301,58 +303,6 @@ module.exports = (app) => {
    *        description: Internal Server Error
    */
   router.delete("/", taskGroup.deleteAll);
-
-  // Add a task to a TaskGroup
-  /**
-   * @swagger
-   * /api/task-group/{taskGroupId}/task/{taskId}:
-   *  put:
-   *    tags:
-   *    - "TaskGroup"
-   *    summary: Add a task to a TaskGroup
-   *    description:  Add a task to a TaskGroup
-   *    consumes: application/json
-   *    produces: application/json
-   *    parameters:
-   *    - name: "taskGroupId"
-   *      in: "path"
-   *      description: "ID of TaskGroup to update"
-   *      required: true
-   *      type: "string"
-   *    - name: "taskId"
-   *      in: "path"
-   *      description: "ID of Task to add"
-   *      required: true
-   *      type: "string"
-   *    responses:
-   *      '200':
-   *        description: Task successfully added to TaskGroup
-   *        schema:
-   *          type: "object"
-   *          properties:
-   *            title:
-   *              type: "string"
-   *            tasks:
-   *              type: "array"
-   *              items:
-   *                type: "object"
-   *                properties:
-   *                  title:
-   *                    type: "string"
-   *                  done:
-   *                    type: "boolean"
-   *                  id:
-   *                    type: "string"
-   *            id:
-   *              type: "string"
-   *      '400':
-   *        description: Wrong TaskGroup or Task id
-   *      '404':
-   *        description: TaskGroup or Task not fouded with specified ids
-   *      '500':
-   *        description: Internal Server Error
-   */
-  router.put("/:taskGroupId/task/:taskId", taskGroup.addTask);
 
   app.use("/api/task-group", router);
 };
