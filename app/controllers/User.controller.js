@@ -1,7 +1,7 @@
 const db = require("../models");
 const User = db.user;
-const Task = db.Task;
-const TaskGroup = db.GroupTask;
+const Task = db.task;
+const TaskGroup = db.taskGroup;
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -125,12 +125,28 @@ exports.delete = (req, res) => {
           message: `Cannot delete User with id=${id}. Maybe User was not found!`,
         });
       } else {
-        res.send({
-          id: data.id,
+        let taskIds = [];
+        const taskGroupIds = data.taskGroups.map((taskGroup) => {
+          const taskGroupId = taskGroup.toString();
+          TaskGroup.findById(taskGroupId).then((taskGroup) => {
+            const tasks = taskGroup.tasks.map((task) => task.toString());
+            taskIds = taskIds.concat(tasks);
+          });
+          return taskGroupId;
+        });
+        TaskGroup.deleteMany({ _id: { $in: taskGroupIds } }).then((secondData) => {
+          Task.deleteMany({ _id: { $in: taskIds } }).then((thirdData) => {
+            res.send({
+              id: data.id,
+              deletedTaskGroupsCount: secondData.deletedCount,
+              deletedTasksCount: thirdData.deletedCount,
+            });
+          });
         });
       }
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).send({
         message: "Could not delete User with id=" + id,
       });
@@ -140,9 +156,15 @@ exports.delete = (req, res) => {
 // Delete all Users from the database.
 exports.deleteAll = (req, res) => {
   User.deleteMany({})
-    .then((data) => {
-      res.send({
-        detetedCount: data.deletedCount,
+    .then((usersData) => {
+      TaskGroup.deleteMany({}).then((taskGroupsData) => {
+        Task.deleteMany({}).then((tasksData) => {
+          res.send({
+            detetedCount: usersData.deletedCount,
+            deletedTaskGroupsCount: taskGroupsData.deletedCount,
+            deletedTasksCount: tasksData.deletedCount,
+          });
+        });
       });
     })
     .catch((err) => {
