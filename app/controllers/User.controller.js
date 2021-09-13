@@ -173,3 +173,18 @@ exports.deleteAll = (req, res) => {
       });
     });
 };
+
+// Find all TaskGroups for one User with his id
+exports.findTaskGroupsForOneUser = (req, res) => {
+  const id = req.params.id;
+
+  User.findById(id)
+    .populate("taskGroups")
+    .then((data) => {
+      if (!data) res.status(404).send({ message: "Not found User with id " + id });
+      else res.send(data.taskGroups);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: "Error retrieving User with id=" + id });
+    });
+};

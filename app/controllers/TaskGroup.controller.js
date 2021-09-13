@@ -259,3 +259,22 @@ exports.findAllToDo = (req, res) => {
       res.status(500).send({ message: "Error retrieving TaskGroup with id=" + id });
     });
 };
+
+// Find all tasks for one TaskGroup
+exports.findAllTasksByTaskGroupId = (req, res) => {
+  const id = req.params.id;
+
+  TaskGroup.findById(id)
+    .populate("tasks")
+    .then((data) => {
+      if (!data) {
+        res.status(404).send({ message: "Not found TaskGroup with id " + id });
+      } else {
+        res.send(data.tasks);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send({ message: "Error retrieving TaskGroup with id=" + id });
+    });
+};

@@ -297,5 +297,52 @@ module.exports = (app) => {
    */
   router.delete("/", user.deleteAll);
 
+  // Retrieve all TaskGroups for one User with id
+  /**
+   * @swagger
+   * /api/user/{userId}/task-groups:
+   *  get:
+   *    tags:
+   *    - "User"
+   *    summary: Retrieve all TaskGroups for one User User with id
+   *    description: Retrieve all TaskGroups for one User with id
+   *    consumes: application/json
+   *    produces: application/json
+   *    parameters:
+   *    - name: "userId"
+   *      in: "path"
+   *      description: "ID of User"
+   *      required: true
+   *      type: "string"
+   *    responses:
+   *      '200':
+   *        description: User's Taskgroups successfully founded
+   *        schema:
+   *          type: "array"
+   *          items:
+   *            type: "object"
+   *            properties:
+   *              title:
+   *                type: "string"
+   *              tasks:
+   *                type: "array"
+   *                items:
+   *                  type: "object"
+   *                  properties:
+   *                    title:
+   *                      type: "string"
+   *                    done:
+   *                      type: "boolean"
+   *                    id:
+   *                      type: "string"
+   *              id:
+   *                type: "string"
+   *      '404':
+   *        description: Task not found with id
+   *      '500':
+   *        description: Internal Server Error
+   */
+  router.get("/:id/task-groups", user.findTaskGroupsForOneUser);
+
   app.use("/api/user", router);
 };

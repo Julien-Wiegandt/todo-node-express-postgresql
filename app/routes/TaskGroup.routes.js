@@ -152,6 +152,42 @@ module.exports = (app) => {
    */
   router.get("/:id/done", taskGroup.findAllDone);
 
+  // Retrieve all done Tasks in a TaskGroup
+  /**
+   * @swagger
+   * /api/task-group/{taskGroupId}/tasks:
+   *  get:
+   *    tags:
+   *    - "TaskGroup 2.0"
+   *    summary: Retrieve all Tasks in a TaskGroup
+   *    description: Retrieve all Tasks in a TaskGroup
+   *    consumes: application/json
+   *    produces: application/json
+   *    parameters:
+   *    - name: "taskGroupId"
+   *      in: "path"
+   *      description: "ID of Tasks's TaskGroup to return"
+   *    responses:
+   *      '200':
+   *        description: Tasks in the TaskGroup successfully retrieved
+   *        schema:
+   *          type: "array"
+   *          items:
+   *            type: "object"
+   *            properties:
+   *              title:
+   *                type: "string"
+   *              done:
+   *                type: "boolean"
+   *              id:
+   *                type: "string"
+   *      '404':
+   *        description: TaskGroup not found with id
+   *      '500':
+   *        description: Internal Server Error
+   */
+  router.get("/:id/tasks", taskGroup.findAllTasksByTaskGroupId);
+
   // Retrieve a single TaskGroup with id
   /**
    * @swagger
