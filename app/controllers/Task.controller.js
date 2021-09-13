@@ -128,7 +128,7 @@ exports.delete = (req, res) => {
           message: `Cannot delete Task with id=${id}. Maybe Task was not found!`,
         });
       } else {
-        deleteTaskByIdInTaskGroups(id);
+        deleteTaskByIdInTaskGroup(id);
         res.send({
           id: data.id,
         });
@@ -144,15 +144,15 @@ exports.delete = (req, res) => {
 /**
  * @todo Fix the optimisation issue (loop on all groups)
  */
-function deleteTaskByIdInTaskGroups(id) {
+function deleteTaskByIdInTaskGroup(id) {
   TaskGroup.find()
     .then((data) => {
       data.map((taskGroup) => {
-        const filteredTask = taskGroup.tasks.filter((task) => {
+        const filteredTasks = taskGroup.tasks.filter((task) => {
           return task._id.toString() !== id;
         });
-        if (filteredTask.length !== taskGroup.tasks.length) {
-          taskGroup.tasks = filteredTask;
+        if (filteredTasks.length !== taskGroup.tasks.length) {
+          taskGroup.tasks = filteredTasks;
           TaskGroup.findByIdAndUpdate(taskGroup.id, taskGroup, {
             useFindAndModify: false,
             new: true,

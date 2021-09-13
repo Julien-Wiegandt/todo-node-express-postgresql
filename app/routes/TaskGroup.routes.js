@@ -6,15 +6,20 @@ module.exports = (app) => {
   // Create a new TaskGroup
   /**
    * @swagger
-   * /api/task-group:
+   * /api/task-group/{userId}:
    *  post:
    *    tags:
-   *    - "TaskGroup"
+   *    - "TaskGroup 2.0"
    *    summary: Create a TaskGroup
    *    description: Create a TaskGroup
    *    consumes: application/json
    *    produces: application/json
    *    parameters:
+   *    - name: "userId"
+   *      in: "path"
+   *      description: "ID of Task's TaskGroup"
+   *      required: true
+   *      type: "string"
    *    - in: body
    *      name: body
    *      description: A TaskGroup has a title and tasks (no tasks at the creation)
@@ -34,7 +39,7 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.post("/", taskGroup.create);
+  router.post("/:id", taskGroup.create);
 
   // Retrieve all TaskGroups
   /**
@@ -252,7 +257,7 @@ module.exports = (app) => {
    * /api/task-group/{taskGroupId}:
    *  delete:
    *    tags:
-   *    - "TaskGroup"
+   *    - "TaskGroup 2.0"
    *    summary: Delete a TaskGroup
    *    description: Delete a TaskGroup
    *    consumes: application/json
@@ -286,7 +291,7 @@ module.exports = (app) => {
    * /api/task-group:
    *  delete:
    *    tags:
-   *    - "TaskGroup"
+   *    - "TaskGroup 2.0"
    *    summary: Delete all TaskGroups
    *    description: Delete all TaskGroups
    *    consumes: application/json

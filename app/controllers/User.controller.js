@@ -1,5 +1,7 @@
 const db = require("../models");
 const User = db.user;
+const Task = db.Task;
+const TaskGroup = db.GroupTask;
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -72,21 +74,44 @@ exports.update = (req, res) => {
     });
   }
 
-  const id = req.params.id;
+  if (req.body.password) {
+    bcrypt.genSalt(saltRounds, function (err, salt) {
+      bcrypt.hash(req.body.password, salt, function (err, hash) {
+        req.body.password = hash;
+        const id = req.params.id;
 
-  User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot update User with id=${id}. Maybe User was not found!`,
-        });
-      } else res.send({ message: "User was updated successfully." });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error updating User with id=" + id,
+        User.findByIdAndUpdate(id, req.body, { useFindAndModify: false, new: true })
+          .then((data) => {
+            if (!data) {
+              res.status(404).send({
+                message: `Cannot update User with id=${id}. Maybe User was not found!`,
+              });
+            } else res.send(data);
+          })
+          .catch((err) => {
+            res.status(500).send({
+              message: "Error updating User with id=" + id,
+            });
+          });
       });
     });
+  } else {
+    const id = req.params.id;
+
+    User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+      .then((data) => {
+        if (!data) {
+          res.status(404).send({
+            message: `Cannot update User with id=${id}. Maybe User was not found!`,
+          });
+        } else res.send({ message: "User was updated successfully." });
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: "Error updating User with id=" + id,
+        });
+      });
+  }
 };
 
 // Delete a User with the specified id in the request
@@ -101,7 +126,7 @@ exports.delete = (req, res) => {
         });
       } else {
         res.send({
-          message: "User was deleted successfully!",
+          id: data.id,
         });
       }
     })
@@ -117,7 +142,7 @@ exports.deleteAll = (req, res) => {
   User.deleteMany({})
     .then((data) => {
       res.send({
-        message: `${data.deletedCount} Users were deleted successfully!`,
+        detetedCount: data.deletedCount,
       });
     })
     .catch((err) => {
