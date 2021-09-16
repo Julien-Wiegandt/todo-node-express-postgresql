@@ -1,5 +1,14 @@
 module.exports = (app) => {
   const user = require("../controllers/User.controller.js");
+  const { authJwt } = require("../middlewares");
+
+  app.use(function (req, res, next) {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
+  });
 
   var router = require("express").Router();
 
@@ -62,17 +71,84 @@ module.exports = (app) => {
    *            id:
    *              type: "string"
    *      '400':
-   *        description: Wrong Task's body parameters/content
+   *        description: Wrong User's body parameters/content
    *      '500':
    *        description: Internal Server Error
    */
   router.post("/", user.create);
+
+  // Signin a user
+  /**
+   * @swagger
+   * /api/user/signin:
+   *  post:
+   *    tags:
+   *    - "User"
+   *    summary: Signin a User
+   *    description: Signin a User
+   *    consumes: application/json
+   *    produces: application/json
+   *    parameters:
+   *    - in: body
+   *      name: body
+   *      description: A User need a email and a password to signin
+   *      required: true
+   *      schema:
+   *        type: "object"
+   *        required:
+   *          - "email"
+   *          - "password"
+   *        properties:
+   *          email:
+   *            type: "string"
+   *          password:
+   *            type: "string"
+   *    responses:
+   *      '201':
+   *        description: User successfully signin
+   *        schema:
+   *          type: "object"
+   *          properties:
+   *            email:
+   *              type: "string"
+   *            password:
+   *              type: "string"
+   *            taskGroups:
+   *              type: "array"
+   *              items:
+   *                type: "object"
+   *                properties:
+   *                  title:
+   *                    type: "string"
+   *                  tasks:
+   *                    type: "array"
+   *                    items:
+   *                      type: "object"
+   *                      properties:
+   *                        title:
+   *                          type: "string"
+   *                        done:
+   *                          type: "boolean"
+   *                        id:
+   *                          type: "string"
+   *                  id:
+   *                    type: "string"
+   *            id:
+   *              type: "string"
+   *      '400':
+   *        description: Wrong User's body parameters/content
+   *      '500':
+   *        description: Internal Server Error
+   */
+  router.post("/signin", user.signin);
 
   // Retrieve all Users
   /**
    * @swagger
    * /api/user:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "User"
    *    summary: Retrieve all Users
@@ -116,7 +192,7 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/", user.findAll);
+  router.get("/", [authJwt.verifyToken], user.findAll);
 
   // Retrieve a single User with id
   /**

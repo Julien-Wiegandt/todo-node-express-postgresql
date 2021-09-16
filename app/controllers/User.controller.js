@@ -2,8 +2,10 @@ const db = require("../models");
 const User = db.user;
 const Task = db.task;
 const TaskGroup = db.taskGroup;
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const Role = db.role;
+const config = require("../config/auth.config");
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -13,27 +15,97 @@ exports.create = (req, res) => {
     return;
   }
 
-  bcrypt.genSalt(saltRounds, function (err, salt) {
-    bcrypt.hash(req.body.password, salt, function (err, hash) {
+  // Save User in the database
+  Role.findOne({ name: "user" })
+    .then((data) => {
       // Create a User
       const user = new User({
         email: req.body.email,
-        password: hash,
+        password: bcrypt.hashSync(req.body.password, 8),
+        roles: [data._id],
       });
 
-      // Save User in the database
-      user
-        .save(user)
-        .then((data) => {
-          res.status(201).send(data);
-        })
-        .catch((err) => {
-          res.status(500).send({
-            message: err.message || "Some error occurred while creating the User.",
-          });
-        });
+      user.save(user).then((data) => {
+        res.status(201).send(data);
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while creating the User.",
+      });
     });
-  });
+};
+
+// Create and Save a new Admin user
+exports.create = (req, res) => {
+  // Validate request
+  if (!req.body.email || !req.body.password) {
+    res.status(400).send({ message: "Content can not be empty!" });
+    return;
+  }
+
+  // Save User in the database
+  Role.findOne({ name: "admin" })
+    .then((data) => {
+      // Create a User
+      const user = new User({
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 8),
+        roles: [data._id],
+      });
+
+      user.save(user).then((data) => {
+        res.status(201).send(data);
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while creating the User.",
+      });
+    });
+};
+
+// Signin the User
+exports.signin = (req, res) => {
+  User.findOne({
+    email: req.body.email,
+  })
+    .populate("roles", "-__v")
+    .exec((err, user) => {
+      if (err) {
+        res.status(500).send({ message: err });
+        return;
+      }
+
+      if (!user) {
+        return res.status(404).send({ message: "User Not found." });
+      }
+
+      var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid Password!",
+        });
+      }
+
+      var token = jwt.sign({ id: user.id }, config.secret, {
+        expiresIn: 86400, // 24 hours
+      });
+
+      var authorities = [];
+
+      for (let i = 0; i < user.roles.length; i++) {
+        authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
+      }
+      res.status(201).send({
+        id: user._id,
+        email: user.email,
+        roles: authorities,
+        accessToken: token,
+      });
+    });
 };
 
 // Retrieve all Users from the database.
@@ -75,26 +147,22 @@ exports.update = (req, res) => {
   }
 
   if (req.body.password) {
-    bcrypt.genSalt(saltRounds, function (err, salt) {
-      bcrypt.hash(req.body.password, salt, function (err, hash) {
-        req.body.password = hash;
-        const id = req.params.id;
+    req.body.password = bcrypt.hashSync(req.body.password, 8);
+    const id = req.params.id;
 
-        User.findByIdAndUpdate(id, req.body, { useFindAndModify: false, new: true })
-          .then((data) => {
-            if (!data) {
-              res.status(404).send({
-                message: `Cannot update User with id=${id}. Maybe User was not found!`,
-              });
-            } else res.send(data);
-          })
-          .catch((err) => {
-            res.status(500).send({
-              message: "Error updating User with id=" + id,
-            });
+    User.findByIdAndUpdate(id, req.body, { useFindAndModify: false, new: true })
+      .then((data) => {
+        if (!data) {
+          res.status(404).send({
+            message: `Cannot update User with id=${id}. Maybe User was not found!`,
           });
+        } else res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: "Error updating User with id=" + id,
+        });
       });
-    });
   } else {
     const id = req.params.id;
 
