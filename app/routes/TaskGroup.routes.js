@@ -1,6 +1,16 @@
 module.exports = (app) => {
   const taskGroup = require("../controllers/TaskGroup.controller.js");
 
+  const { authJwt } = require("../middlewares");
+
+  app.use(function (req, res, next) {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
+  });
+
   var router = require("express").Router();
 
   // Create a new TaskGroup
@@ -8,9 +18,11 @@ module.exports = (app) => {
    * @swagger
    * /api/task-group/{userId}:
    *  post:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "TaskGroup 2.0"
-   *    summary: Create a TaskGroup
+   *    summary: Create a TaskGroup [UserAccess]
    *    description: Create a TaskGroup
    *    consumes: application/json
    *    produces: application/json
@@ -39,16 +51,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.post("/:id", taskGroup.create);
+  router.post("/:id", [authJwt.verifyToken], taskGroup.create);
 
   // Retrieve all TaskGroups
   /**
    * @swagger
    * /api/task-group:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "TaskGroup 2.0"
-   *    summary: Retrieve all TaskGroups
+   *    summary: Retrieve all TaskGroups [AdminAccess]
    *    description: Retrieve all TaskGroups
    *    consumes: application/json
    *    produces: application/json
@@ -78,16 +92,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/", taskGroup.findAll);
+  router.get("/", [authJwt.verifyToken, authJwt.isAdmin], taskGroup.findAll);
 
   // Retrieve all to do TaskGroups
   /**
    * @swagger
    * /api/task-group/{taskGroupId}/todo:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "TaskGroup 2.0"
-   *    summary: Retrieve all to do Tasks in a TaskGroup
+   *    summary: Retrieve all to do Tasks in a TaskGroup [UserAccess]
    *    description: Retrieve all to do Tasks in a TaskGroup
    *    consumes: application/json
    *    produces: application/json
@@ -114,16 +130,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/:id/todo", taskGroup.findAllToDo);
+  router.get("/:id/todo", [authJwt.verifyToken], taskGroup.findAllToDo);
 
   // Retrieve all done Tasks in a TaskGroup
   /**
    * @swagger
    * /api/task-group/{taskGroupId}/done:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "TaskGroup 2.0"
-   *    summary: Retrieve all done Tasks in a TaskGroup
+   *    summary: Retrieve all done Tasks in a TaskGroup [UserAccess]
    *    description: Retrieve all done Tasks in a TaskGroup
    *    consumes: application/json
    *    produces: application/json
@@ -150,16 +168,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/:id/done", taskGroup.findAllDone);
+  router.get("/:id/done", [authJwt.verifyToken], taskGroup.findAllDone);
 
   // Retrieve all done Tasks in a TaskGroup
   /**
    * @swagger
    * /api/task-group/{taskGroupId}/tasks:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "TaskGroup 2.0"
-   *    summary: Retrieve all Tasks in a TaskGroup
+   *    summary: Retrieve all Tasks in a TaskGroup [UserAccess]
    *    description: Retrieve all Tasks in a TaskGroup
    *    consumes: application/json
    *    produces: application/json
@@ -186,16 +206,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/:id/tasks", taskGroup.findAllTasksByTaskGroupId);
+  router.get("/:id/tasks", [authJwt.verifyToken], taskGroup.findAllTasksByTaskGroupId);
 
   // Retrieve a single TaskGroup with id
   /**
    * @swagger
    * /api/task-group/{taskGroupId}:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "TaskGroup 2.0"
-   *    summary: Retrieve a single TaskGroup with id
+   *    summary: Retrieve a single TaskGroup with id [UserAccess]
    *    description: Retrieve a single TaskGroup with id
    *    consumes: application/json
    *    produces: application/json
@@ -231,16 +253,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/:id", taskGroup.findOne);
+  router.get("/:id", [authJwt.verifyToken], taskGroup.findOne);
 
   // Update a TaskGroup with id
   /**
    * @swagger
    * /api/task-group/{taskGroupId}:
    *  put:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "TaskGroup 2.0"
-   *    summary: Update a TaskGroup
+   *    summary: Update a TaskGroup [UserAccess]
    *    description: Update a TaskGroup
    *    consumes: application/json
    *    produces: application/json
@@ -285,16 +309,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.put("/:id", taskGroup.update);
+  router.put("/:id", [authJwt.verifyToken], taskGroup.update);
 
   // Delete a TaskGroup with id
   /**
    * @swagger
    * /api/task-group/{taskGroupId}:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "TaskGroup 2.0"
-   *    summary: Delete a TaskGroup
+   *    summary: Delete a TaskGroup [UserAccess]
    *    description: Delete a TaskGroup
    *    consumes: application/json
    *    produces: application/json
@@ -319,16 +345,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.delete("/:id", taskGroup.delete);
+  router.delete("/:id", [authJwt.verifyToken], taskGroup.delete);
 
   // Delete all TaskGroups
   /**
    * @swagger
    * /api/task-group:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "TaskGroup 2.0"
-   *    summary: Delete all TaskGroups
+   *    summary: Delete all TaskGroups [AdminAccess]
    *    description: Delete all TaskGroups
    *    consumes: application/json
    *    produces: application/json
@@ -343,7 +371,7 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.delete("/", taskGroup.deleteAll);
+  router.delete("/", [authJwt.verifyToken, authJwt.isAdmin], taskGroup.deleteAll);
 
   app.use("/api/task-group", router);
 };

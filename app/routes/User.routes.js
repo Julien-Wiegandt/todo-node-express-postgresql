@@ -19,7 +19,7 @@ module.exports = (app) => {
    *  post:
    *    tags:
    *    - "User"
-   *    summary: Create a User
+   *    summary: Create a User [AllAccess]
    *    description: Create a User
    *    consumes: application/json
    *    produces: application/json
@@ -84,7 +84,7 @@ module.exports = (app) => {
    *  post:
    *    tags:
    *    - "User"
-   *    summary: Signin a User
+   *    summary: Signin a User [AllAccess]
    *    description: Signin a User
    *    consumes: application/json
    *    produces: application/json
@@ -151,7 +151,7 @@ module.exports = (app) => {
    *      - bearerAuth: []
    *    tags:
    *    - "User"
-   *    summary: Retrieve all Users
+   *    summary: Retrieve all Users [AmdinAccess]
    *    description: Retrieve all Users
    *    consumes: application/json
    *    produces: application/json
@@ -192,16 +192,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/", [authJwt.verifyToken], user.findAll);
+  router.get("/", [authJwt.verifyToken, authJwt.isAdmin], user.findAll);
 
   // Retrieve a single User with id
   /**
    * @swagger
    * /api/user/{userId}:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "User"
-   *    summary: Retrieve a single User with id
+   *    summary: Retrieve a single User with id [UserAccess]
    *    description: Retrieve a single User with id
    *    consumes: application/json
    *    produces: application/json
@@ -248,16 +250,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/:id", user.findOne);
+  router.get("/:id", [authJwt.verifyToken], user.findOne);
 
   // Update a User with id
   /**
    * @swagger
    * /api/user/{userId}:
    *  put:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "User"
-   *    summary: Update a User
+   *    summary: Update a User [UserAccess]
    *    description: Update a User
    *    consumes: application/json
    *    produces: application/json
@@ -315,16 +319,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.put("/:id", user.update);
+  router.put("/:id", [authJwt.verifyToken], user.update);
 
   // Delete a User with id
   /**
    * @swagger
    * /api/user/{userId}:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "User"
-   *    summary: Delete a User
+   *    summary: Delete a User [UserAccess]
    *    description: Delete a User
    *    consumes: application/json
    *    produces: application/json
@@ -347,16 +353,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.delete("/:id", user.delete);
+  router.delete("/:id", [authJwt.verifyToken], user.delete);
 
   // Delete all Users
   /**
    * @swagger
    * /api/user:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "User"
-   *    summary: Delete all Users
+   *    summary: Delete all Users [AdminAccess]
    *    description: Delete all Users
    *    consumes: application/json
    *    produces: application/json
@@ -371,16 +379,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.delete("/", user.deleteAll);
+  router.delete("/", [authJwt.verifyToken, authJwt.isAdmin], user.deleteAll);
 
   // Retrieve all TaskGroups for one User with id
   /**
    * @swagger
    * /api/user/{userId}/task-groups:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "User"
-   *    summary: Retrieve all TaskGroups for one User User with id
+   *    summary: Retrieve all TaskGroups for one User User with id [UserAccess]
    *    description: Retrieve all TaskGroups for one User with id
    *    consumes: application/json
    *    produces: application/json
@@ -418,7 +428,7 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/:id/task-groups", user.findTaskGroupsForOneUser);
+  router.get("/:id/task-groups", [authJwt.verifyToken], user.findTaskGroupsForOneUser);
 
   app.use("/api/user", router);
 };

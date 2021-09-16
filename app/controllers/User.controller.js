@@ -37,10 +37,10 @@ exports.create = (req, res) => {
 };
 
 // Create and Save a new Admin user
-exports.create = (req, res) => {
+exports.createAdmin = (email, password) => {
   // Validate request
-  if (!req.body.email || !req.body.password) {
-    res.status(400).send({ message: "Content can not be empty!" });
+  if (!email || !password) {
+    console.log("Parameters cannot be empty");
     return;
   }
 
@@ -49,19 +49,18 @@ exports.create = (req, res) => {
     .then((data) => {
       // Create a User
       const user = new User({
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 8),
+        email: email,
+        password: bcrypt.hashSync(password, 8),
         roles: [data._id],
       });
 
       user.save(user).then((data) => {
-        res.status(201).send(data);
+        console.log("Admin created");
+        return;
       });
     })
     .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while creating the User.",
-      });
+      console.log("Some error occurred while creating the User.");
     });
 };
 

@@ -1,6 +1,16 @@
 module.exports = (app) => {
   const task = require("../controllers/Task.controller.js");
 
+  const { authJwt } = require("../middlewares");
+
+  app.use(function (req, res, next) {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
+  });
+
   var router = require("express").Router();
 
   // Create a new Task
@@ -8,9 +18,11 @@ module.exports = (app) => {
    * @swagger
    * /api/task/{taskGroupId}:
    *  post:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "Task 2.0"
-   *    summary: Create a Task
+   *    summary: Create a Task [UserAccess]
    *    description: Create a Task
    *    consumes: application/json
    *    produces: application/json
@@ -51,16 +63,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.post("/:id", task.create);
+  router.post("/:id", [authJwt.verifyToken], task.create);
 
   // Retrieve all Tasks
   /**
    * @swagger
    * /api/task:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "Task 2.0"
-   *    summary: Retrieve all Tasks
+   *    summary: Retrieve all Tasks [AdminAccess]
    *    description: Retrieve all Tasks
    *    consumes: application/json
    *    produces: application/json
@@ -81,16 +95,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/", task.findAll);
+  router.get("/", [authJwt.verifyToken, authJwt.isAdmin], task.findAll);
 
   // Retrieve all to do Tasks
   /**
    * @swagger
    * /api/task/todo:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "Task 2.0"
-   *    summary: Retrieve all to do Tasks
+   *    summary: Retrieve all to do Tasks [AdminAccess]
    *    description: Retrieve all to do Tasks
    *    consumes: application/json
    *    produces: application/json
@@ -111,16 +127,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/todo", task.findAllToDo);
+  router.get("/todo", [authJwt.verifyToken, authJwt.isAdmin], task.findAllToDo);
 
   // Retrieve all done Tasks
   /**
    * @swagger
    * /api/task/done:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "Task 2.0"
-   *    summary: Retrieve all done Tasks
+   *    summary: Retrieve all done Tasks [AdminAccess]
    *    description: Retrieve all done Tasks
    *    consumes: application/json
    *    produces: application/json
@@ -141,16 +159,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/done", task.findAllDone);
+  router.get("/done", [authJwt.verifyToken, authJwt.isAdmin], task.findAllDone);
 
   // Retrieve a single Task with id
   /**
    * @swagger
    * /api/task/{taskId}:
    *  get:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "Task 2.0"
-   *    summary: Retrieve a single Task with id
+   *    summary: Retrieve a single Task with id [UserAccess]
    *    description: Retrieve a single Task with id
    *    consumes: application/json
    *    produces: application/json
@@ -177,16 +197,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.get("/:id", task.findOne);
+  router.get("/:id", [authJwt.verifyToken], task.findOne);
 
   // Update a Task with id
   /**
    * @swagger
    * /api/task/{taskId}:
    *  put:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "Task 2.0"
-   *    summary: Update a Task
+   *    summary: Update a Task [UserAccess]
    *    description: Update a Task
    *    consumes: application/json
    *    produces: application/json
@@ -224,16 +246,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.put("/:id", task.update);
+  router.put("/:id", [authJwt.verifyToken], task.update);
 
   // Delete a Task with id
   /**
    * @swagger
    * /api/task/{taskId}:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "Task 2.0"
-   *    summary: Delete a Task
+   *    summary: Delete a Task [UserAccess]
    *    description: Delete a Task
    *    consumes: application/json
    *    produces: application/json
@@ -256,16 +280,18 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.delete("/:id", task.delete);
+  router.delete("/:id", [authJwt.verifyToken], task.delete);
 
   // Delete all Tasks
   /**
    * @swagger
    * /api/task:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *    - "Task 2.0"
-   *    summary: Delete all Tasks
+   *    summary: Delete all Tasks [AdminAccess]
    *    description: Delete all Tasks
    *    consumes: application/json
    *    produces: application/json
@@ -280,7 +306,7 @@ module.exports = (app) => {
    *      '500':
    *        description: Internal Server Error
    */
-  router.delete("/", task.deleteAll);
+  router.delete("/", [authJwt.verifyToken, authJwt.isAdmin], task.deleteAll);
 
   app.use("/api/task", router);
 };
