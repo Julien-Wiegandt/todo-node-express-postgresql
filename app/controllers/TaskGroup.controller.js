@@ -16,7 +16,7 @@ exports.create = (req, res) => {
   // Create a TaskGroup
   const taskGroup = {
     title: req.body.title,
-    userId: req.params.id,
+    UserId: req.params.id,
   };
 
   // Save TaskGroup in the database
@@ -77,7 +77,11 @@ exports.update = (req, res) => {
         res.status(404).send({
           message: `Cannot update TaskGroup with id=${id}. Maybe TaskGroup was not found!`,
         });
-      } else res.send(data);
+      } else {
+        TaskGroup.findByPk(id).then((data) => {
+          res.send(data);
+        });
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -98,7 +102,7 @@ exports.delete = (req, res) => {
           message: `Cannot delete TaskGroup with id=${id}. Maybe 404 : TaskGroup was not found!`,
         });
       } else {
-        res.send(data);
+        res.send({ id: id });
       }
     })
     .catch((err) => {
@@ -113,7 +117,7 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   TaskGroup.destroy({ where: {}, cascade: true })
     .then((data) => {
-      res.send(data);
+      res.send({ deletedItems: data });
     })
     .catch((err) => {
       console.log(err);
@@ -127,7 +131,7 @@ exports.deleteAll = (req, res) => {
 exports.findAllDone = (req, res) => {
   const id = req.params.id;
 
-  Task.findAll({ where: { taskGroupId: id, done: true } })
+  Task.findAll({ where: { TaskGroupId: id, done: true } })
     .then((data) => {
       res.send(data);
     })
@@ -143,7 +147,7 @@ exports.findAllDone = (req, res) => {
 exports.findAllToDo = (req, res) => {
   const id = req.params.id;
 
-  Task.findAll({ where: { taskGroupId: id, done: false } })
+  Task.findAll({ where: { TaskGroupId: id, done: false } })
     .then((data) => {
       res.send(data);
     })
@@ -159,7 +163,7 @@ exports.findAllToDo = (req, res) => {
 exports.findAllTasksByTaskGroupId = (req, res) => {
   const id = req.params.id;
 
-  Task.findAll({ where: { taskGroupId: id } })
+  Task.findAll({ where: { TaskGroupId: id } })
     .then((data) => {
       res.send(data);
     })

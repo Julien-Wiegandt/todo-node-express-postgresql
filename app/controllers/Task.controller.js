@@ -15,7 +15,7 @@ exports.create = (req, res) => {
   const task = {
     title: req.body.title,
     done: req.body.done,
-    taskGroupId: req.params.id,
+    TaskGroupId: req.params.id,
   };
 
   // Save Task in the database
@@ -78,7 +78,11 @@ exports.update = (req, res) => {
         res.status(400).send({
           message: `Cannot update Task with id=${id}. Maybe 404 : Task was not found!`,
         });
-      } else res.send(data);
+      } else {
+        Task.findByPk(id).then((data) => {
+          res.send(data);
+        });
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -99,7 +103,7 @@ exports.delete = (req, res) => {
           message: `Cannot delete Task with id=${id}. Maybe Task was not found!`,
         });
       } else {
-        res.send(data);
+        res.send({ id: id });
       }
     })
     .catch((err) => {
@@ -114,7 +118,7 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   Task.destroy({ where: {}, truncate: false })
     .then((data) => {
-      res.send(data);
+      res.send({ deletedItems: data });
     })
     .catch((err) => {
       console.log(err);

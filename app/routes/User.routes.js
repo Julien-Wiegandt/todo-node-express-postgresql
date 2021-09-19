@@ -18,7 +18,7 @@ module.exports = (app) => {
    * /api/user:
    *  post:
    *    tags:
-   *    - "User"
+   *    - "User 2.0"
    *    summary: Create a User [AllAccess]
    *    description: Create a User
    *    consumes: application/json
@@ -44,32 +44,14 @@ module.exports = (app) => {
    *        schema:
    *          type: "object"
    *          properties:
+   *            id:
+   *              type: "integer"
    *            email:
    *              type: "string"
    *            password:
    *              type: "string"
-   *            taskGroups:
-   *              type: "array"
-   *              items:
-   *                type: "object"
-   *                properties:
-   *                  title:
-   *                    type: "string"
-   *                  tasks:
-   *                    type: "array"
-   *                    items:
-   *                      type: "object"
-   *                      properties:
-   *                        title:
-   *                          type: "string"
-   *                        done:
-   *                          type: "boolean"
-   *                        id:
-   *                          type: "string"
-   *                  id:
-   *                    type: "string"
-   *            id:
-   *              type: "string"
+   *            RoleId:
+   *              type: "integer"
    *      '400':
    *        description: Wrong User's body parameters/content
    *      '500':
@@ -83,7 +65,7 @@ module.exports = (app) => {
    * /api/user/signin:
    *  post:
    *    tags:
-   *    - "User"
+   *    - "User 2.0"
    *    summary: Signin a User [AllAccess]
    *    description: Signin a User
    *    consumes: application/json
@@ -109,31 +91,11 @@ module.exports = (app) => {
    *        schema:
    *          type: "object"
    *          properties:
+   *            id:
+   *              type: "integer"
    *            email:
    *              type: "string"
-   *            password:
-   *              type: "string"
-   *            taskGroups:
-   *              type: "array"
-   *              items:
-   *                type: "object"
-   *                properties:
-   *                  title:
-   *                    type: "string"
-   *                  tasks:
-   *                    type: "array"
-   *                    items:
-   *                      type: "object"
-   *                      properties:
-   *                        title:
-   *                          type: "string"
-   *                        done:
-   *                          type: "boolean"
-   *                        id:
-   *                          type: "string"
-   *                  id:
-   *                    type: "string"
-   *            id:
+   *            accessToken:
    *              type: "string"
    *      '400':
    *        description: Wrong User's body parameters/content
@@ -150,7 +112,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User"
+   *    - "User 2.0"
    *    summary: Retrieve all Users [AmdinAccess]
    *    description: Retrieve all Users
    *    consumes: application/json
@@ -163,32 +125,14 @@ module.exports = (app) => {
    *          items:
    *            type: "object"
    *            properties:
+   *              id:
+   *                type: "integer"
    *              email:
    *                type: "string"
    *              password:
    *                type: "string"
-   *              taskGroups:
-   *                type: "array"
-   *                items:
-   *                  type: "object"
-   *                  properties:
-   *                    title:
-   *                      type: "string"
-   *                    tasks:
-   *                      type: "array"
-   *                      items:
-   *                        type: "object"
-   *                        properties:
-   *                          title:
-   *                            type: "string"
-   *                          done:
-   *                            type: "boolean"
-   *                          id:
-   *                            type: "string"
-   *                    id:
-   *                      type: "string"
-   *              id:
-   *                type: "string"
+   *              RoleId:
+   *                type: "integer"
    *      '500':
    *        description: Internal Server Error
    */
@@ -202,7 +146,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User"
+   *    - "User 2.0"
    *    summary: Retrieve a single User with id [UserAccess]
    *    description: Retrieve a single User with id
    *    consumes: application/json
@@ -219,34 +163,16 @@ module.exports = (app) => {
    *        schema:
    *          type: "object"
    *          properties:
+   *            id:
+   *              type: "integer"
    *            email:
    *              type: "string"
-   *            done:
-   *              type: "boolean"
-   *            taskGroups:
-   *              type: "array"
-   *              items:
-   *                type: "object"
-   *                properties:
-   *                  title:
-   *                    type: "string"
-   *                  tasks:
-   *                    type: "array"
-   *                    items:
-   *                      type: "object"
-   *                      properties:
-   *                        title:
-   *                          type: "string"
-   *                        done:
-   *                          type: "boolean"
-   *                        id:
-   *                          type: "string"
-   *                  id:
-   *                    type: "string"
-   *            id:
+   *            password:
    *              type: "string"
+   *            RoleId:
+   *              type: "integer"
    *      '404':
-   *        description: Task not found with id
+   *        description: User not found with id
    *      '500':
    *        description: Internal Server Error
    */
@@ -260,7 +186,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User"
+   *    - "User 2.0"
    *    summary: Update a User [UserAccess]
    *    description: Update a User
    *    consumes: application/json
@@ -288,32 +214,14 @@ module.exports = (app) => {
    *        schema:
    *          type: "object"
    *          properties:
+   *            id:
+   *              type: "integer"
    *            email:
    *              type: "string"
    *            password:
    *              type: "string"
-   *            taskGroups:
-   *              type: "array"
-   *              items:
-   *                type: "object"
-   *                properties:
-   *                  title:
-   *                    type: "string"
-   *                  tasks:
-   *                    type: "array"
-   *                    items:
-   *                      type: "object"
-   *                      properties:
-   *                        title:
-   *                          type: "string"
-   *                        done:
-   *                          type: "boolean"
-   *                        id:
-   *                          type: "string"
-   *                  id:
-   *                    type: "string"
-   *            id:
-   *              type: "string"
+   *            RoleId:
+   *              type: "integer"
    *      '400':
    *        description: Wrong User's id or body parameters/content
    *      '500':
@@ -329,7 +237,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User"
+   *    - "User 2.0"
    *    summary: Delete a User [UserAccess]
    *    description: Delete a User
    *    consumes: application/json
@@ -347,7 +255,7 @@ module.exports = (app) => {
    *          type: "object"
    *          properties:
    *            id:
-   *              type: "string"
+   *              type: "integer"
    *      '404':
    *        description: User not found
    *      '500':
@@ -363,7 +271,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User"
+   *    - "User 2.0"
    *    summary: Delete all Users [AdminAccess]
    *    description: Delete all Users
    *    consumes: application/json
@@ -374,7 +282,7 @@ module.exports = (app) => {
    *        schema:
    *          type: "object"
    *          properties:
-   *            deletedCount:
+   *            deletedItems:
    *              type: "integer"
    *      '500':
    *        description: Internal Server Error
@@ -389,7 +297,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User"
+   *    - "User 2.0"
    *    summary: Retrieve all TaskGroups for one User User with id [UserAccess]
    *    description: Retrieve all TaskGroups for one User with id
    *    consumes: application/json
@@ -408,23 +316,14 @@ module.exports = (app) => {
    *          items:
    *            type: "object"
    *            properties:
+   *              id:
+   *                type: "integer"
    *              title:
    *                type: "string"
-   *              tasks:
-   *                type: "array"
-   *                items:
-   *                  type: "object"
-   *                  properties:
-   *                    title:
-   *                      type: "string"
-   *                    done:
-   *                      type: "boolean"
-   *                    id:
-   *                      type: "string"
-   *              id:
-   *                type: "string"
+   *              UserId:
+   *                type: "integer"
    *      '404':
-   *        description: Task not found with id
+   *        description: User not found with id
    *      '500':
    *        description: Internal Server Error
    */

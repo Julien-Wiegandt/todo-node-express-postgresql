@@ -32,9 +32,9 @@ db.TaskGroup = require("./TaskGroup.model.js")(sequelize, Sequelize);
 db.User = require("./User.model.js")(sequelize, Sequelize);
 
 // Associations
-db.Task.belongsTo(db.TaskGroup);
+db.Task.belongsTo(db.TaskGroup, { onDelete: "cascade", hooks: true });
 db.TaskGroup.hasMany(db.Task, { as: "tasks" });
-db.TaskGroup.belongsTo(db.User);
+db.TaskGroup.belongsTo(db.User, { onDelete: "cascade", hooks: true });
 db.User.hasMany(db.TaskGroup, { as: "taskGroups" });
 db.User.belongsTo(db.Role);
 

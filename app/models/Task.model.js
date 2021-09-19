@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "Task", // Set the table name
+      tableName: "Task",
+      timestamps: false, // Set the table name
     }
   );
 

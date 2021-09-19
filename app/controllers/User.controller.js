@@ -1,10 +1,10 @@
 const db = require("../models");
 const User = db.User;
 const Task = db.Task;
+const Role = db.Role;
 const TaskGroup = db.TaskGroup;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const Role = db.Role;
 const config = require("../config/auth.config");
 
 // Create and Save a new User
@@ -16,13 +16,13 @@ exports.create = (req, res) => {
   }
 
   // Save User in the database
-  Role.findOne({ where: { name: "user" } })
+  Role.findOne({ where: { name: "User" } })
     .then((data) => {
       // Create a User
       const user = {
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 8),
-        role: data.id,
+        RoleId: data.dataValues.id,
       };
 
       User.create(user).then((data) => {
@@ -72,36 +72,38 @@ exports.signin = (req, res) => {
     where: {
       email: req.body.email,
     },
-  }).exec((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
-    }
+  })
+    .then((data) => {
+      if (!data) {
+        return res.status(404).send({ message: "User Not found." });
+      }
 
-    if (!user) {
-      return res.status(404).send({ message: "User Not found." });
-    }
+      let passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        data.dataValues.password
+      );
 
-    var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid Password!",
+        });
+      }
 
-    if (!passwordIsValid) {
-      return res.status(401).send({
-        accessToken: null,
-        message: "Invalid Password!",
+      let token = jwt.sign({ id: data.dataValues.id }, config.secret, {
+        expiresIn: 86400, // 24 hours
       });
-    }
 
-    var token = jwt.sign({ id: user.id }, config.secret, {
-      expiresIn: 86400, // 24 hours
+      res.status(201).send({
+        id: data.dataValues.id,
+        email: data.dataValues.email,
+        role: data.dataValues.role,
+        accessToken: token,
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err });
     });
-
-    res.status(201).send({
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      accessToken: token,
-    });
-  });
 };
 
 // Retrieve all Users from the database.
@@ -152,7 +154,11 @@ exports.update = (req, res) => {
         res.status(404).send({
           message: `Cannot update User with id=${id}. Maybe User was not found!`,
         });
-      } else res.send(data);
+      } else {
+        User.findByPk(id).then((user) => {
+          res.send(user);
+        });
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -173,7 +179,7 @@ exports.delete = (req, res) => {
           message: `Cannot delete User with id=${id}. Maybe User was not found!`,
         });
       } else {
-        res.send(data);
+        res.send({ id: id });
       }
     })
     .catch((err) => {
@@ -188,7 +194,7 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   User.destroy({ where: {}, cascade: true })
     .then((data) => {
-      res.send(data);
+      res.send({ deletedItems: data });
     })
     .catch((err) => {
       console.log(err);
@@ -202,7 +208,7 @@ exports.deleteAll = (req, res) => {
 exports.findTaskGroupsForOneUser = (req, res) => {
   const id = req.params.id;
 
-  TaskGroup.findAll({ where: { userId: id } })
+  TaskGroup.findAll({ where: { UserId: id } })
     .then((data) => {
       res.send(data);
     })

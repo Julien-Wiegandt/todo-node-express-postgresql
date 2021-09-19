@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "TaskGroup", // Set the table name
+      tableName: "TaskGroup",
+      timestamps: false, // Set the table name
     }
   );
 

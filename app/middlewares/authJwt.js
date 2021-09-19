@@ -21,34 +21,24 @@ verifyToken = (req, res, next) => {
 };
 
 isAdmin = (req, res, next) => {
-  User.findById(req.userId).exec((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
-    }
-
-    Role.find(
-      {
-        _id: { $in: user.roles },
-      },
-      (err, roles) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        for (let i = 0; i < roles.length; i++) {
-          if (roles[i].name === "admin") {
+  User.findByPk(req.userId)
+    .then((user) => {
+      Role.findByPk(user.dataValues.RoleId)
+        .then((role) => {
+          if (role.dataValues.name === "Admin") {
             next();
             return;
           }
-        }
-
-        res.status(403).send({ message: "Require Admin Role!" });
-        return;
-      }
-    );
-  });
+          res.status(403).send({ message: "Require Admin Role!" });
+          return;
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err });
+        });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err });
+    });
 };
 
 const authJwt = {

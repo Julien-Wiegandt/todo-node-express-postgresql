@@ -52,12 +52,12 @@ module.exports = (app) => {
    *        schema:
    *          type: "object"
    *          properties:
+   *            id:
+   *              type: "integer"
    *            title:
    *              type: "string"
    *            done:
    *              type: boolean
-   *            id:
-   *              type: "string"
    *      '400':
    *        description: Wrong Task's body parameters/content
    *      '500':
@@ -86,12 +86,14 @@ module.exports = (app) => {
    *          items:
    *            type: "object"
    *            properties:
+   *              id:
+   *                type: "integer"
    *              title:
    *                type: "string"
    *              done:
    *                type: "boolean"
-   *              id:
-   *                type: "string"
+   *              TaskGroupid:
+   *                type: "integer"
    *      '500':
    *        description: Internal Server Error
    */
@@ -118,12 +120,14 @@ module.exports = (app) => {
    *          items:
    *            type: "object"
    *            properties:
+   *              id:
+   *                type: "integer"
    *              title:
    *                type: "string"
    *              done:
    *                type: "boolean"
-   *              id:
-   *                type: "string"
+   *              TaskGroupid:
+   *                type: "integer"
    *      '500':
    *        description: Internal Server Error
    */
@@ -150,12 +154,14 @@ module.exports = (app) => {
    *          items:
    *            type: "object"
    *            properties:
+   *              id:
+   *                type: "integer"
    *              title:
    *                type: "string"
    *              done:
    *                type: "boolean"
-   *              id:
-   *                type: "string"
+   *              TaskGroupid:
+   *                type: "integer"
    *      '500':
    *        description: Internal Server Error
    */
@@ -186,12 +192,14 @@ module.exports = (app) => {
    *        schema:
    *          type: "object"
    *          properties:
+   *            id:
+   *              type: "integer"
    *            title:
    *              type: "string"
    *            done:
    *              type: "boolean"
-   *            id:
-   *              type: "string"
+   *            TaskGroupid:
+   *                type: "integer"
    *      '404':
    *        description: Task not found with id
    *      '500':
@@ -235,12 +243,14 @@ module.exports = (app) => {
    *        schema:
    *          type: "object"
    *          properties:
+   *            id:
+   *              type: "integer"
    *            title:
    *              type: "string"
    *            done:
    *              type: "boolean"
-   *            id:
-   *              type: "string"
+   *            TaskGroupid:
+   *              type: "integer"
    *      '400':
    *        description: Wrong Task's id or body parameters/content
    *      '500':
@@ -274,7 +284,7 @@ module.exports = (app) => {
    *          type: "object"
    *          properties:
    *            id:
-   *              type: "string"
+   *              type: "integer"
    *      '404':
    *        description: Task not found
    *      '500':
@@ -301,7 +311,7 @@ module.exports = (app) => {
    *        schema:
    *          type: "object"
    *          properties:
-   *            deletedCount:
+   *            deletedItems:
    *              type: "integer"
    *      '500':
    *        description: Internal Server Error

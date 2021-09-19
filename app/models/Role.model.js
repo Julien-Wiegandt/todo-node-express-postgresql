@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
     },
-    { tableName: "Role" } // Set the table name
+    { tableName: "Role", timestamps: false } // Set the table name
   );
 
   return Role;
