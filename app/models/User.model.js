@@ -1,23 +1,24 @@
-const { Schema } = require("mongoose");
-
-module.exports = (mongoose) => {
-  let schema = mongoose.Schema({
-    email: { type: String, required: true, index: { unique: true } },
-    password: { type: String, required: true },
-    taskGroups: [{ type: Schema.Types.ObjectId, ref: "TaskGroup" }],
-    roles: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Role",
-      },
-    ],
-  });
-  schema.method("toJSON", function () {
-    const { __v, _id, ...object } = this.toObject();
-    object.id = _id;
-    return object;
+module.exports = (sequelize, Sequelize) => {
+  const TaskGroup = require("./TaskGroup.model");
+  const Role = require("./Role.model");
+  const User = sequelize.define("user", {
+    email: {
+      type: Sequelize.STRING,
+      unique: true,
+    },
+    password: {
+      type: Sequelize.STRING,
+    },
+    tableName: "User", // Set the table name
   });
 
-  const User = mongoose.model("User", schema);
+  User.hasMany(TaskGroup, { as: "taskGroups" });
+  TaskGroup.belongsTo(User, {
+    foreignKey: "userId",
+    as: "user",
+  });
+
+  User.hasOne(Role, { as: "role" });
+
   return User;
 };

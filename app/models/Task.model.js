@@ -1,14 +1,14 @@
-module.exports = (mongoose) => {
-  var schema = mongoose.Schema({
-    title: { type: String, required: true },
-    done: { type: Boolean, default: false },
-  });
-  schema.method("toJSON", function () {
-    const { __v, _id, ...object } = this.toObject();
-    object.id = _id;
-    return object;
+module.exports = (sequelize, Sequelize) => {
+  const Task = sequelize.define("task", {
+    title: {
+      type: Sequelize.STRING,
+    },
+    done: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
+    tableName: "Task", // Set the table name
   });
 
-  const Task = mongoose.model("Task", schema);
   return Task;
 };

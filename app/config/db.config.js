@@ -1,3 +1,13 @@
 module.exports = {
-  url: "mongodb+srv://dbJulienW:todo-database-pass-2021@cluster0.kn6le.mongodb.net/todo_db?retryWrites=true&w=majority",
+  HOST: process.env.DB_HOST,
+  USER: process.env.DB_USER,
+  PASSWORD: process.env.DB_PASSWORD,
+  DB: process.env.DB_NAME,
+  dialect: "postgres",
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000,
+  },
 };

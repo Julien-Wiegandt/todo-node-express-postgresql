@@ -1,7 +1,7 @@
 {
-  "name": "todo-nem",
+  "name": "todo-node-express-postgresql",
   "version": "1.0.0",
-  "description": "TODO NodeJS Express MongoDB Rest API",
+  "description": "TODO Node.js Express PostgreSQL Sequelize Rest API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,9 +13,10 @@
   "keywords": [
     "nodejs",
     "express",
-    "mongodb",
+    "sequelize",
     "rest",
-    "api"
+    "api",
+    "postgresql"
   ],
   "author": "Julien Wiegandt",
   "license": "MIT",
@@ -28,7 +29,9 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.0.5",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.6.5",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6"
   }
