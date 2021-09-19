@@ -1,24 +1,16 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const TaskGroup = require("./TaskGroup.model");
   const Role = require("./Role.model");
-  const User = sequelize.define("user", {
+  const User = sequelize.define("User", {
     email: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       unique: true,
     },
     password: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
     },
     tableName: "User", // Set the table name
   });
-
-  User.hasMany(TaskGroup, { as: "taskGroups" });
-  TaskGroup.belongsTo(User, {
-    foreignKey: "userId",
-    as: "user",
-  });
-
-  User.hasOne(Role, { as: "role" });
 
   return User;
 };

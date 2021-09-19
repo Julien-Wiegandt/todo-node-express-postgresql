@@ -1,10 +1,12 @@
-module.exports = (sequelize, Sequelize) => {
-  const Task = sequelize.define("task", {
+module.exports = (sequelize, DataTypes) => {
+  const TaskGroup = require("./TaskGroup.model");
+
+  const Task = sequelize.define("Task", {
     title: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
     },
     done: {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
     tableName: "Task", // Set the table name
