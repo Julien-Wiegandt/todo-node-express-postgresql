@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const bcrypt = require("bcrypt");
 
 const app = express();
 
@@ -74,6 +75,41 @@ app.listen(PORT, () => {
 
 const db = require("./app/models");
 // force: true will Drop and re-sync the db
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({ force: false }).then(() => {
   console.log("Drop and re-sync db.");
 });
+
+// Initialize database
+init();
+
+function init() {
+  db.Role.findOne({ where: { name: "User" } }).then((data) => {
+    if (!data) {
+      const user = {
+        name: "User",
+      };
+      db.Role.create(user).then(() => {
+        console.log("Role : User created");
+      });
+    }
+  });
+
+  db.Role.findOne({ where: { name: "Admin" } }).then((data) => {
+    if (!data) {
+      const admin = {
+        name: "Admin",
+      };
+      db.Role.create(admin).then((data) => {
+        console.log("Role : Admin created");
+        const adminUser = {
+          email: process.env.ADMIN_EMAIL,
+          password: bcrypt.hashSync(process.env.ADMIN_PASSWORD, 8),
+          RoleId: data.dataValues.id,
+        };
+        db.User.create(adminUser).then((data) => {
+          console.log(data.dataValues);
+        });
+      });
+    }
+  });
+}

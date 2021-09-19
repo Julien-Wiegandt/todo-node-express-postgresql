@@ -1,5 +1,4 @@
 const dbConfig = require("../config/db.config.js");
-const applyTableAssociations = require("./Associations");
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -32,6 +31,11 @@ db.Task = require("./Task.model.js")(sequelize, Sequelize);
 db.TaskGroup = require("./TaskGroup.model.js")(sequelize, Sequelize);
 db.User = require("./User.model.js")(sequelize, Sequelize);
 
-applyTableAssociations;
+// Associations
+db.Task.belongsTo(db.TaskGroup);
+db.TaskGroup.hasMany(db.Task, { as: "tasks" });
+db.TaskGroup.belongsTo(db.User);
+db.User.hasMany(db.TaskGroup, { as: "taskGroups" });
+db.User.belongsTo(db.Role);
 
 module.exports = db;
