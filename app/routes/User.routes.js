@@ -18,7 +18,7 @@ module.exports = (app) => {
    * /api/user:
    *  post:
    *    tags:
-   *    - "User 2.0"
+   *    - "User 3.0"
    *    summary: Create a User [AllAccess]
    *    description: Create a User
    *    consumes: application/json
@@ -65,7 +65,7 @@ module.exports = (app) => {
    * /api/user/signin:
    *  post:
    *    tags:
-   *    - "User 2.0"
+   *    - "User 3.0"
    *    summary: Signin a User [AllAccess]
    *    description: Signin a User
    *    consumes: application/json
@@ -112,8 +112,8 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 2.0"
-   *    summary: Retrieve all Users [AmdinAccess]
+   *    - "User 3.0"
+   *    summary: Retrieve all Users [AdminAccess]
    *    description: Retrieve all Users
    *    consumes: application/json
    *    produces: application/json
@@ -133,6 +133,8 @@ module.exports = (app) => {
    *                type: "string"
    *              RoleId:
    *                type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -146,7 +148,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 2.0"
+   *    - "User 3.0"
    *    summary: Retrieve a single User with id [UserAccess]
    *    description: Retrieve a single User with id
    *    consumes: application/json
@@ -171,6 +173,8 @@ module.exports = (app) => {
    *              type: "string"
    *            RoleId:
    *              type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: User not found with id
    *      '500':
@@ -186,7 +190,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 2.0"
+   *    - "User 3.0"
    *    summary: Update a User [UserAccess]
    *    description: Update a User
    *    consumes: application/json
@@ -224,6 +228,8 @@ module.exports = (app) => {
    *              type: "integer"
    *      '400':
    *        description: Wrong User's id or body parameters/content
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -237,7 +243,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 2.0"
+   *    - "User 3.0"
    *    summary: Delete a User [UserAccess]
    *    description: Delete a User
    *    consumes: application/json
@@ -256,6 +262,8 @@ module.exports = (app) => {
    *          properties:
    *            id:
    *              type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: User not found
    *      '500':
@@ -271,7 +279,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 2.0"
+   *    - "User 3.0"
    *    summary: Delete all Users [AdminAccess]
    *    description: Delete all Users
    *    consumes: application/json
@@ -284,6 +292,8 @@ module.exports = (app) => {
    *          properties:
    *            deletedItems:
    *              type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -297,8 +307,8 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 2.0"
-   *    summary: Retrieve all TaskGroups for one User User with id [UserAccess]
+   *    - "User 3.0"
+   *    summary: Retrieve all TaskGroups for one User with id [UserAccess]
    *    description: Retrieve all TaskGroups for one User with id
    *    consumes: application/json
    *    produces: application/json
@@ -322,6 +332,8 @@ module.exports = (app) => {
    *                type: "string"
    *              UserId:
    *                type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: User not found with id
    *      '500':

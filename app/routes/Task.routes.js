@@ -60,6 +60,8 @@ module.exports = (app) => {
    *              type: boolean
    *      '400':
    *        description: Wrong Task's body parameters/content
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -94,6 +96,8 @@ module.exports = (app) => {
    *                type: "boolean"
    *              TaskGroupid:
    *                type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -128,6 +132,8 @@ module.exports = (app) => {
    *                type: "boolean"
    *              TaskGroupid:
    *                type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -162,6 +168,8 @@ module.exports = (app) => {
    *                type: "boolean"
    *              TaskGroupid:
    *                type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -200,6 +208,8 @@ module.exports = (app) => {
    *              type: "boolean"
    *            TaskGroupid:
    *                type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: Task not found with id
    *      '500':
@@ -253,6 +263,8 @@ module.exports = (app) => {
    *              type: "integer"
    *      '400':
    *        description: Wrong Task's id or body parameters/content
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -285,6 +297,8 @@ module.exports = (app) => {
    *          properties:
    *            id:
    *              type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: Task not found
    *      '500':
@@ -313,6 +327,8 @@ module.exports = (app) => {
    *          properties:
    *            deletedItems:
    *              type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */

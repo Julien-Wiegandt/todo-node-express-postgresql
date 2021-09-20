@@ -21,7 +21,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 2.0"
+   *    - "TaskGroup 3.0"
    *    summary: Create a TaskGroup [UserAccess]
    *    description: Create a TaskGroup
    *    consumes: application/json
@@ -57,6 +57,8 @@ module.exports = (app) => {
    *              type: "integer"
    *      '400':
    *        description: Wrong TaskGroup's body parameters/content
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -70,7 +72,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 2.0"
+   *    - "TaskGroup 3.0"
    *    summary: Retrieve all TaskGroups [AdminAccess]
    *    description: Retrieve all TaskGroups
    *    consumes: application/json
@@ -89,6 +91,8 @@ module.exports = (app) => {
    *                type: "string"
    *              UserId:
    *                type: "string"
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -102,7 +106,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 2.0"
+   *    - "TaskGroup 3.0"
    *    summary: Retrieve all to do Tasks in a TaskGroup [UserAccess]
    *    description: Retrieve all to do Tasks in a TaskGroup
    *    consumes: application/json
@@ -127,6 +131,8 @@ module.exports = (app) => {
    *                type: "boolean"
    *              TaskGroupid:
    *                  type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: TaskGroup not found with id
    *      '500':
@@ -142,7 +148,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 2.0"
+   *    - "TaskGroup 3.0"
    *    summary: Retrieve all done Tasks in a TaskGroup [UserAccess]
    *    description: Retrieve all done Tasks in a TaskGroup
    *    consumes: application/json
@@ -167,6 +173,8 @@ module.exports = (app) => {
    *                type: "boolean"
    *              TaskGroupid:
    *                  type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: TaskGroup not found with id
    *      '500':
@@ -182,7 +190,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 2.0"
+   *    - "TaskGroup 3.0"
    *    summary: Retrieve all Tasks in a TaskGroup [UserAccess]
    *    description: Retrieve all Tasks in a TaskGroup
    *    consumes: application/json
@@ -207,6 +215,8 @@ module.exports = (app) => {
    *                type: "boolean"
    *              TaskGroupid:
    *                  type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: TaskGroup not found with id
    *      '500':
@@ -222,7 +232,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 2.0"
+   *    - "TaskGroup 3.0"
    *    summary: Retrieve a single TaskGroup with id [UserAccess]
    *    description: Retrieve a single TaskGroup with id
    *    consumes: application/json
@@ -245,6 +255,8 @@ module.exports = (app) => {
    *              type: "string"
    *            UserId:
    *              type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: TaskGroup not found with id
    *      '500':
@@ -260,7 +272,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 2.0"
+   *    - "TaskGroup 3.0"
    *    summary: Update a TaskGroup [UserAccess]
    *    description: Update a TaskGroup
    *    consumes: application/json
@@ -294,6 +306,8 @@ module.exports = (app) => {
    *              type: "integer"
    *      '400':
    *        description: Wrong TaskGroup's id or body parameters/content
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */
@@ -307,7 +321,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 2.0"
+   *    - "TaskGroup 3.0"
    *    summary: Delete a TaskGroup [UserAccess]
    *    description: Delete a TaskGroup
    *    consumes: application/json
@@ -326,6 +340,8 @@ module.exports = (app) => {
    *          properties:
    *            id:
    *              type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '404':
    *        description: TaskGroup not found
    *      '500':
@@ -341,7 +357,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 2.0"
+   *    - "TaskGroup 3.0"
    *    summary: Delete all TaskGroups [AdminAccess]
    *    description: Delete all TaskGroups
    *    consumes: application/json
@@ -354,6 +370,8 @@ module.exports = (app) => {
    *          properties:
    *            deletedItems:
    *              type: "integer"
+   *      '403':
+   *        description: Unauthorized
    *      '500':
    *        description: Internal Server Error
    */

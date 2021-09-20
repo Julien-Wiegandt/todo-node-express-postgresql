@@ -5,7 +5,7 @@ const Role = db.Role;
 const TaskGroup = db.TaskGroup;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const config = require("../config/auth.config");
+const config = require("../config/auth.config.js");
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -124,15 +124,24 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findByPk(id)
-    .then((data) => {
-      if (!data) res.status(404).send({ message: "Not found User with id " + id });
-      else res.send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({ message: "Error retrieving User with id=" + id });
-    });
+  let token = req.headers["x-access-token"];
+  const decoded = jwt.verify(token, config.secret);
+  let userId = decoded.id;
+  if (userId == id) {
+    User.findByPk(id)
+      .then((data) => {
+        if (!data) res.status(404).send({ message: "Not found User with id " + id });
+        else res.send(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send({ message: "Error retrieving User with id=" + id });
+      });
+  } else {
+    res
+      .status(403)
+      .send({ message: "You are trying to access a resource that is not yours." });
+  }
 };
 
 // Update a User by the id in the request
@@ -148,46 +157,65 @@ exports.update = (req, res) => {
   }
   const id = req.params.id;
 
-  User.update(req.body, { where: { id: id } })
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot update User with id=${id}. Maybe User was not found!`,
+  let token = req.headers["x-access-token"];
+  const decoded = jwt.verify(token, config.secret);
+  let userId = decoded.id;
+  if (userId == id) {
+    User.update(req.body, { where: { id: id } })
+      .then((data) => {
+        if (data[0] !== 1) {
+          res.status(400).send({
+            message: `Cannot update User with id=${id}. Maybe User was not found!`,
+          });
+        } else {
+          console.log(data);
+          User.findByPk(id).then((user) => {
+            res.send(user);
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send({
+          message: "Error updating User with id=" + id,
         });
-      } else {
-        User.findByPk(id).then((user) => {
-          res.send(user);
-        });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        message: "Error updating User with id=" + id,
       });
-    });
+  } else {
+    res
+      .status(403)
+      .send({ message: "You are trying to access a resource that is not yours." });
+  }
 };
 
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  User.destroy({ where: { id: id }, cascade: true })
-    .then((data) => {
-      if (!data) {
-        res.status(400).send({
-          message: `Cannot delete User with id=${id}. Maybe User was not found!`,
+  let token = req.headers["x-access-token"];
+  const decoded = jwt.verify(token, config.secret);
+  let userId = decoded.id;
+  if (userId == id) {
+    User.destroy({ where: { id: id }, cascade: true })
+      .then((data) => {
+        if (!data) {
+          res.status(400).send({
+            message: `Cannot delete User with id=${id}. Maybe User was not found!`,
+          });
+        } else {
+          res.send({ id: id });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send({
+          message: "Could not delete User with id=" + id,
         });
-      } else {
-        res.send({ id: id });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        message: "Could not delete User with id=" + id,
       });
-    });
+  } else {
+    res
+      .status(403)
+      .send({ message: "You are trying to access a resource that is not yours." });
+  }
 };
 
 // Delete all Users from the database.
@@ -208,14 +236,24 @@ exports.deleteAll = (req, res) => {
 exports.findTaskGroupsForOneUser = (req, res) => {
   const id = req.params.id;
 
-  TaskGroup.findAll({ where: { UserId: id } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        message: "Some error occurred while retrieving TaskGroups.",
+  let token = req.headers["x-access-token"];
+  const decoded = jwt.verify(token, config.secret);
+  let userId = decoded.id;
+  if (userId == id) {
+    // If TaskGroup doesn't exist -> [] and no 404
+    TaskGroup.findAll({ where: { UserId: id } })
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send({
+          message: "Some error occurred while retrieving TaskGroups.",
+        });
       });
-    });
+  } else {
+    res
+      .status(403)
+      .send({ message: "You are trying to access a resource that is not yours." });
+  }
 };
