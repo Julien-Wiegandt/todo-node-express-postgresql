@@ -98,91 +98,7 @@ module.exports = (app) => {
    */
   router.get("/", [authJwt.verifyToken, authJwt.isAdmin], taskGroup.findAll);
 
-  // Retrieve all to do TaskGroups
-  /**
-   * @swagger
-   * /api/task-group/{taskGroupId}/todo:
-   *  get:
-   *    security:
-   *      - bearerAuth: []
-   *    tags:
-   *    - "TaskGroup 3.0"
-   *    summary: Retrieve all to do Tasks in a TaskGroup [UserAccess]
-   *    description: Retrieve all to do Tasks in a TaskGroup
-   *    consumes: application/json
-   *    produces: application/json
-   *    parameters:
-   *    - name: "taskGroupId"
-   *      in: "path"
-   *      description: "ID of Tasks's TaskGroup to return"
-   *    responses:
-   *      '200':
-   *        description: To do Tasks in the TaskGroup successfully retrieved
-   *        schema:
-   *          type: "array"
-   *          items:
-   *            type: "object"
-   *            properties:
-   *              id:
-   *                type: "integer"
-   *              title:
-   *                type: "string"
-   *              done:
-   *                type: "boolean"
-   *              TaskGroupid:
-   *                  type: "integer"
-   *      '403':
-   *        description: Unauthorized
-   *      '404':
-   *        description: TaskGroup not found with id
-   *      '500':
-   *        description: Internal Server Error
-   */
-  router.get("/:id/todo", [authJwt.verifyToken], taskGroup.findAllToDo);
-
-  // Retrieve all done Tasks in a TaskGroup
-  /**
-   * @swagger
-   * /api/task-group/{taskGroupId}/done:
-   *  get:
-   *    security:
-   *      - bearerAuth: []
-   *    tags:
-   *    - "TaskGroup 3.0"
-   *    summary: Retrieve all done Tasks in a TaskGroup [UserAccess]
-   *    description: Retrieve all done Tasks in a TaskGroup
-   *    consumes: application/json
-   *    produces: application/json
-   *    parameters:
-   *    - name: "taskGroupId"
-   *      in: "path"
-   *      description: "ID of Tasks's TaskGroup to return"
-   *    responses:
-   *      '200':
-   *        description: Done Tasks in the TaskGroup successfully retrieved
-   *        schema:
-   *          type: "array"
-   *          items:
-   *            type: "object"
-   *            properties:
-   *              id:
-   *                type: "integer"
-   *              title:
-   *                type: "string"
-   *              done:
-   *                type: "boolean"
-   *              TaskGroupid:
-   *                  type: "integer"
-   *      '403':
-   *        description: Unauthorized
-   *      '404':
-   *        description: TaskGroup not found with id
-   *      '500':
-   *        description: Internal Server Error
-   */
-  router.get("/:id/done", [authJwt.verifyToken], taskGroup.findAllDone);
-
-  // Retrieve all done Tasks in a TaskGroup
+  // Retrieve all Tasks in a TaskGroup
   /**
    * @swagger
    * /api/task-group/{taskGroupId}/tasks:
@@ -199,6 +115,10 @@ module.exports = (app) => {
    *    - name: "taskGroupId"
    *      in: "path"
    *      description: "ID of Tasks's TaskGroup to return"
+   *    - name : "done"
+   *      in: "query"
+   *      description: "Filter by done or to do tasks"
+   *      type: "boolean"
    *    responses:
    *      '200':
    *        description: Tasks in the TaskGroup successfully retrieved

@@ -80,6 +80,11 @@ module.exports = (app) => {
    *    description: Retrieve all Tasks
    *    consumes: application/json
    *    produces: application/json
+   *    parameters:
+   *    - name : "done"
+   *      in: "query"
+   *      description: "Filter by done or to do tasks"
+   *      type: "boolean"
    *    responses:
    *      '200':
    *        description: Tasks successfully retrieved
@@ -102,78 +107,6 @@ module.exports = (app) => {
    *        description: Internal Server Error
    */
   router.get("/", [authJwt.verifyToken, authJwt.isAdmin], task.findAll);
-
-  // Retrieve all to do Tasks
-  /**
-   * @swagger
-   * /api/task/todo:
-   *  get:
-   *    security:
-   *      - bearerAuth: []
-   *    tags:
-   *    - "Task 3.0"
-   *    summary: Retrieve all to do Tasks [AdminAccess]
-   *    description: Retrieve all to do Tasks
-   *    consumes: application/json
-   *    produces: application/json
-   *    responses:
-   *      '200':
-   *        description: To do Tasks successfully retrieved
-   *        schema:
-   *          type: "array"
-   *          items:
-   *            type: "object"
-   *            properties:
-   *              id:
-   *                type: "integer"
-   *              title:
-   *                type: "string"
-   *              done:
-   *                type: "boolean"
-   *              TaskGroupid:
-   *                type: "integer"
-   *      '403':
-   *        description: Unauthorized
-   *      '500':
-   *        description: Internal Server Error
-   */
-  router.get("/todo", [authJwt.verifyToken, authJwt.isAdmin], task.findAllToDo);
-
-  // Retrieve all done Tasks
-  /**
-   * @swagger
-   * /api/task/done:
-   *  get:
-   *    security:
-   *      - bearerAuth: []
-   *    tags:
-   *    - "Task 3.0"
-   *    summary: Retrieve all done Tasks [AdminAccess]
-   *    description: Retrieve all done Tasks
-   *    consumes: application/json
-   *    produces: application/json
-   *    responses:
-   *      '200':
-   *        description: Done Tasks successfully retrieved
-   *        schema:
-   *          type: "array"
-   *          items:
-   *            type: "object"
-   *            properties:
-   *              id:
-   *                type: "integer"
-   *              title:
-   *                type: "string"
-   *              done:
-   *                type: "boolean"
-   *              TaskGroupid:
-   *                type: "integer"
-   *      '403':
-   *        description: Unauthorized
-   *      '500':
-   *        description: Internal Server Error
-   */
-  router.get("/done", [authJwt.verifyToken, authJwt.isAdmin], task.findAllDone);
 
   // Retrieve a single Task with id
   /**

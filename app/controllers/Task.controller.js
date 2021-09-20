@@ -59,7 +59,14 @@ exports.create = (req, res) => {
 
 // Retrieve all Tasks from the database.
 exports.findAll = (req, res) => {
-  Task.findAll()
+  const done = req.query.done;
+  let condition = {};
+
+  if (done) {
+    condition = { where: { done: done } };
+  }
+
+  Task.findAll(condition)
     .then((data) => {
       res.send(data);
     })
@@ -252,34 +259,6 @@ exports.deleteAll = (req, res) => {
       console.log(err);
       res.status(500).send({
         message: "Some error occurred while removing all Tasks.",
-      });
-    });
-};
-
-// Find all done Tasks
-exports.findAllDone = (req, res) => {
-  Task.findAll({ where: { done: true } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        message: "Some error occurred while retrieving Tasks.",
-      });
-    });
-};
-
-// Find all to do Tasks
-exports.findAllToDo = (req, res) => {
-  Task.findAll({ where: { done: false } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving tasks.",
       });
     });
 };

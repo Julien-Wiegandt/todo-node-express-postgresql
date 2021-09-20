@@ -30,6 +30,8 @@ Then create a **_.env_** at the root of the project with this variables
 
     JWT_SECRET_KEY=secret-key
 
+    PORT=3000
+
 It's almost done, now add the npm packages
 
     npm install
