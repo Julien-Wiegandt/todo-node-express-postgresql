@@ -21,7 +21,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 2.0"
+   *    - "Task 3.0"
    *    summary: Create a Task [UserAccess]
    *    description: Create a Task
    *    consumes: application/json
@@ -75,7 +75,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 2.0"
+   *    - "Task 3.0"
    *    summary: Retrieve all Tasks [AdminAccess]
    *    description: Retrieve all Tasks
    *    consumes: application/json
@@ -111,7 +111,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 2.0"
+   *    - "Task 3.0"
    *    summary: Retrieve all to do Tasks [AdminAccess]
    *    description: Retrieve all to do Tasks
    *    consumes: application/json
@@ -147,7 +147,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 2.0"
+   *    - "Task 3.0"
    *    summary: Retrieve all done Tasks [AdminAccess]
    *    description: Retrieve all done Tasks
    *    consumes: application/json
@@ -183,7 +183,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 2.0"
+   *    - "Task 3.0"
    *    summary: Retrieve a single Task with id [UserAccess]
    *    description: Retrieve a single Task with id
    *    consumes: application/json
@@ -225,7 +225,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 2.0"
+   *    - "Task 3.0"
    *    summary: Update a Task [UserAccess]
    *    description: Update a Task
    *    consumes: application/json
@@ -278,7 +278,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 2.0"
+   *    - "Task 3.0"
    *    summary: Delete a Task [UserAccess]
    *    description: Delete a Task
    *    consumes: application/json
@@ -314,7 +314,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 2.0"
+   *    - "Task 3.0"
    *    summary: Delete all Tasks [AdminAccess]
    *    description: Delete all Tasks
    *    consumes: application/json

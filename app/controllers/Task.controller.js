@@ -1,12 +1,15 @@
 const db = require("../models");
 const Task = db.Task;
+const TaskGroup = db.TaskGroup;
+const jwt = require("jsonwebtoken");
+const config = require("../config/auth.config.js");
 
 // Create and Save a new Task in a existing TaskGroup
 exports.create = (req, res) => {
-  const taskGroupId = req.params.id;
+  const id = req.params.id;
 
   // Validate request
-  if (!req.body.title || !taskGroupId) {
+  if (!req.body.title || !id) {
     res.status(400).send({ message: "Wrong parameters/body" });
     return;
   }
@@ -15,18 +18,41 @@ exports.create = (req, res) => {
   const task = {
     title: req.body.title,
     done: req.body.done,
-    TaskGroupId: req.params.id,
+    TaskGroupId: id,
   };
 
-  // Save Task in the database
-  Task.create(task)
+  TaskGroup.findByPk(id)
     .then((data) => {
-      res.status(201).send(data);
+      if (!data) {
+        res.status(404).send({
+          message: `TaskGroup was not found!`,
+        });
+      }
+      let token = req.headers["x-access-token"];
+      const decoded = jwt.verify(token, config.secret);
+      let userId = decoded.id;
+      if (userId == data.UserId) {
+        // Save Task in the database
+        Task.create(task)
+          .then((data) => {
+            res.status(201).send(data);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).send({
+              message: "Some error occurred while creating the task.",
+            });
+          });
+      } else {
+        res
+          .status(403)
+          .send({ message: "You are trying to access a resource that is not yours." });
+      }
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send({
-        message: "Some error occurred while creating the task.",
+      res.status(404).send({
+        message: `TaskGroup was not found!`,
       });
     });
 };
@@ -50,9 +76,34 @@ exports.findOne = (req, res) => {
   const id = req.params.id;
 
   Task.findByPk(id)
-    .then((data) => {
-      if (!data) res.status(404).send({ message: "Not found Task with id " + id });
-      else res.send(data);
+    .then((task) => {
+      if (!task) res.status(404).send({ message: "Not found Task with id " + id });
+      else {
+        TaskGroup.findByPk(task.TaskGroupId)
+          .then((data) => {
+            if (!data) {
+              res.status(404).send({
+                message: `TaskGroup was not found!`,
+              });
+            }
+            let token = req.headers["x-access-token"];
+            const decoded = jwt.verify(token, config.secret);
+            let userId = decoded.id;
+            if (userId == data.UserId) {
+              res.send(task);
+            } else {
+              res.status(403).send({
+                message: "You are trying to access a resource that is not yours.",
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(404).send({
+              message: `TaskGroup was not found!`,
+            });
+          });
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -72,16 +123,58 @@ exports.update = (req, res) => {
 
   const id = req.params.id;
 
-  Task.update(req.body, { where: { id: id } })
-    .then((data) => {
-      if (!data) {
-        res.status(400).send({
-          message: `Cannot update Task with id=${id}. Maybe 404 : Task was not found!`,
-        });
-      } else {
-        Task.findByPk(id).then((data) => {
-          res.send(data);
-        });
+  Task.findByPk(id)
+    .then((task) => {
+      if (!task) res.status(404).send({ message: "Not found Task with id " + id });
+      else {
+        TaskGroup.findByPk(task.TaskGroupId)
+          .then((data) => {
+            if (!data) {
+              res.status(404).send({
+                message: `TaskGroup was not found!`,
+              });
+            }
+            let token = req.headers["x-access-token"];
+            const decoded = jwt.verify(token, config.secret);
+            let userId = decoded.id;
+            if (userId == data.UserId) {
+              Task.update(req.body, { where: { id: id } })
+                .then((data) => {
+                  if (!data) {
+                    res.status(400).send({
+                      message: `Cannot update Task with id=${id}. Maybe 404 : Task was not found!`,
+                    });
+                  } else {
+                    Task.findByPk(id)
+                      .then((data) => {
+                        res.send(data);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                        res.status(404).send({
+                          message: "Not found Task with id=" + id,
+                        });
+                      });
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                  res.status(500).send({
+                    message: "Error updating Task with id=" + id,
+                  });
+                });
+            } else {
+              res.status(403).send({
+                message: "You are trying to access a resource that is not yours.",
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).send({
+              message: "Error finding TaskGroup's Task",
+            });
+          });
       }
     })
     .catch((err) => {
@@ -96,20 +189,55 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Task.destroy({ where: { id: id } })
-    .then((data) => {
-      if (!data) {
-        res.status(400).send({
-          message: `Cannot delete Task with id=${id}. Maybe Task was not found!`,
-        });
-      } else {
-        res.send({ id: id });
+  Task.findByPk(id)
+    .then((task) => {
+      if (!task) res.status(404).send({ message: "Not found Task with id " + id });
+      else {
+        TaskGroup.findByPk(task.TaskGroupId)
+          .then((data) => {
+            if (!data) {
+              res.status(404).send({
+                message: `TaskGroup was not found!`,
+              });
+            }
+            let token = req.headers["x-access-token"];
+            const decoded = jwt.verify(token, config.secret);
+            let userId = decoded.id;
+            if (userId == data.UserId) {
+              Task.destroy({ where: { id: id } })
+                .then((data) => {
+                  if (!data) {
+                    res.status(400).send({
+                      message: `Cannot delete Task with id=${id}. Maybe Task was not found!`,
+                    });
+                  } else {
+                    res.send({ id: id });
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                  res.status(500).send({
+                    message: "Could not delete Task with id=" + id,
+                  });
+                });
+            } else {
+              res.status(403).send({
+                message: "You are trying to access a resource that is not yours.",
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).send({
+              message: "Error finding TaskGroup's Task",
+            });
+          });
       }
     })
     .catch((err) => {
       console.log(err);
       res.status(500).send({
-        message: "Could not delete Task with id=" + id,
+        message: "Error updating Task with id=" + id,
       });
     });
 };
