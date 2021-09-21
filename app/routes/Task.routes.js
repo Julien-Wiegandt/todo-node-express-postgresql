@@ -81,7 +81,7 @@ module.exports = (app) => {
    *    consumes: application/json
    *    produces: application/json
    *    parameters:
-   *    - name : "done"
+   *    - name : "doness"
    *      in: "query"
    *      description: "Filter by done or to do tasks"
    *      type: "boolean"
