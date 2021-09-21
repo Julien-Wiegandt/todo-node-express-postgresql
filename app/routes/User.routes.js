@@ -18,7 +18,7 @@ module.exports = (app) => {
    * /api/user:
    *  post:
    *    tags:
-   *    - "User 3.0"
+   *    - "User"
    *    summary: Create a User [AllAccess]
    *    description: Create a User
    *    consumes: application/json
@@ -65,7 +65,7 @@ module.exports = (app) => {
    * /api/user/signin:
    *  post:
    *    tags:
-   *    - "User 3.0"
+   *    - "User"
    *    summary: Signin a User [AllAccess]
    *    description: Signin a User
    *    consumes: application/json
@@ -112,7 +112,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 3.0"
+   *    - "User"
    *    summary: Retrieve all Users [AdminAccess]
    *    description: Retrieve all Users
    *    consumes: application/json
@@ -148,7 +148,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 3.0"
+   *    - "User"
    *    summary: Retrieve a single User with id [UserAccess]
    *    description: Retrieve a single User with id
    *    consumes: application/json
@@ -190,7 +190,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 3.0"
+   *    - "User"
    *    summary: Update a User [UserAccess]
    *    description: Update a User
    *    consumes: application/json
@@ -243,7 +243,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 3.0"
+   *    - "User"
    *    summary: Delete a User [UserAccess]
    *    description: Delete a User
    *    consumes: application/json
@@ -279,7 +279,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 3.0"
+   *    - "User"
    *    summary: Delete all Users [AdminAccess]
    *    description: Delete all Users
    *    consumes: application/json
@@ -307,7 +307,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "User 3.0"
+   *    - "User"
    *    summary: Retrieve all TaskGroups for one User with id [UserAccess]
    *    description: Retrieve all TaskGroups for one User with id
    *    consumes: application/json

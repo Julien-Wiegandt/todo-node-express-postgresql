@@ -21,7 +21,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 3.0"
+   *    - "Task"
    *    summary: Create a Task [UserAccess]
    *    description: Create a Task
    *    consumes: application/json
@@ -75,7 +75,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 3.0"
+   *    - "Task"
    *    summary: Retrieve all Tasks [AdminAccess]
    *    description: Retrieve all Tasks
    *    consumes: application/json
@@ -116,7 +116,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 3.0"
+   *    - "Task"
    *    summary: Retrieve a single Task with id [UserAccess]
    *    description: Retrieve a single Task with id
    *    consumes: application/json
@@ -158,7 +158,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 3.0"
+   *    - "Task"
    *    summary: Update a Task [UserAccess]
    *    description: Update a Task
    *    consumes: application/json
@@ -211,7 +211,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 3.0"
+   *    - "Task"
    *    summary: Delete a Task [UserAccess]
    *    description: Delete a Task
    *    consumes: application/json
@@ -247,7 +247,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "Task 3.0"
+   *    - "Task"
    *    summary: Delete all Tasks [AdminAccess]
    *    description: Delete all Tasks
    *    consumes: application/json

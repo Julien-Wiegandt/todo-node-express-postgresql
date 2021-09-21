@@ -15,7 +15,8 @@ const swaggerOptions = {
   swaggerDefinition: {
     info: {
       title: "TODO API",
-      description: "NodeJS + Express + MongoDB todo API",
+      description:
+        "NodeJS + Express + Sequelize + PostgreSQL todo API.\n\n Git repository : https://github.com/Julien-Wiegandt/todo-node-express-postgresql",
       contact: {
         name: "Julien Wiegandt",
         email: "julienwiegandt@gmail.com",

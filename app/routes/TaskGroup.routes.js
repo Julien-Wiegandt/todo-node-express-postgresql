@@ -21,7 +21,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 3.0"
+   *    - "TaskGroup"
    *    summary: Create a TaskGroup [UserAccess]
    *    description: Create a TaskGroup
    *    consumes: application/json
@@ -72,7 +72,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 3.0"
+   *    - "TaskGroup"
    *    summary: Retrieve all TaskGroups [AdminAccess]
    *    description: Retrieve all TaskGroups
    *    consumes: application/json
@@ -106,7 +106,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 3.0"
+   *    - "TaskGroup"
    *    summary: Retrieve all Tasks in a TaskGroup [UserAccess]
    *    description: Retrieve all Tasks in a TaskGroup
    *    consumes: application/json
@@ -152,7 +152,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 3.0"
+   *    - "TaskGroup"
    *    summary: Retrieve a single TaskGroup with id [UserAccess]
    *    description: Retrieve a single TaskGroup with id
    *    consumes: application/json
@@ -192,7 +192,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 3.0"
+   *    - "TaskGroup"
    *    summary: Update a TaskGroup [UserAccess]
    *    description: Update a TaskGroup
    *    consumes: application/json
@@ -241,7 +241,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 3.0"
+   *    - "TaskGroup"
    *    summary: Delete a TaskGroup [UserAccess]
    *    description: Delete a TaskGroup
    *    consumes: application/json
@@ -277,7 +277,7 @@ module.exports = (app) => {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *    - "TaskGroup 3.0"
+   *    - "TaskGroup"
    *    summary: Delete all TaskGroups [AdminAccess]
    *    description: Delete all TaskGroups
    *    consumes: application/json
