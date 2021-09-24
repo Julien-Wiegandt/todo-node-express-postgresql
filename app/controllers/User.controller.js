@@ -78,7 +78,6 @@ exports.signin = (req, res) => {
         return res.status(404).send({ message: "User Not found." });
       }
 
-      console.log(data.dataValues.password);
       let passwordIsValid = bcrypt.compareSync(
         req.body.password,
         data.dataValues.password
