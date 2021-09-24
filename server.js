@@ -6,18 +6,11 @@ const bcrypt = require("bcrypt");
 
 const app = express();
 
-var corsOptions = {
-  origin: [
-    "http://localhost:8081",
-    "https://todo-node-express-postgresql.herokuapp.com/",
-  ],
-};
-
 // Swagger configs
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
-      title: "TODO API 2",
+      title: "TODO API 3",
       description:
         "NodeJS + Express + Sequelize + PostgreSQL todo API.\n\n Git repository : https://github.com/Julien-Wiegandt/todo-node-express-postgresql",
       contact: {
@@ -46,7 +39,7 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(express.json());
