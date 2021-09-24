@@ -7,7 +7,10 @@ const bcrypt = require("bcrypt");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081",
+  origin: [
+    "http://localhost:8081",
+    "https://todo-node-express-postgresql.herokuapp.com/",
+  ],
 };
 
 // Swagger configs
