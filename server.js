@@ -17,7 +17,7 @@ var corsOptions = {
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
-      title: "TODO API",
+      title: "TODO API 2",
       description:
         "NodeJS + Express + Sequelize + PostgreSQL todo API.\n\n Git repository : https://github.com/Julien-Wiegandt/todo-node-express-postgresql",
       contact: {
