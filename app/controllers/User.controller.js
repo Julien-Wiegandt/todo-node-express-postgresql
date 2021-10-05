@@ -26,7 +26,13 @@ exports.create = (req, res) => {
       };
 
       User.create(user).then((data) => {
-        res.status(201).send(data);
+        const taskGroup = {
+          title: "My Tasks",
+          UserId: data.id,
+        };
+        TaskGroup.create(taskGroup).then(() => {
+          res.status(201).send(data);
+        });
       });
     })
     .catch((err) => {
